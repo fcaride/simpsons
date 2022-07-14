@@ -1,14 +1,69 @@
 import React from "react";
 import { CastButton, useRemoteMediaClient } from "react-native-google-cast";
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import {
+  StyleSheet,
+  FlatList,
+  View,
+  StatusBar,
+  TouchableOpacity,
+  Text,
+} from "react-native";
+import { episodes } from "./episodes";
+import { Item } from "./Item";
+import { MediaControls } from "./MediaControls";
+import { formatName } from "./utils";
 
 export default function App() {
+  const client = useRemoteMediaClient();
+
+  const renderItem = ({ item }) => <Item name={item} />;
+  const filteredEpisodes = episodes.filter((episode) =>
+    episode.endsWith(".mp4")
+  );
+
+  const shuffleArray = (array) => {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+  };
+  const randomCast = () => {
+    const items = filteredEpisodes.slice(0, 400).map((episode) => {
+      const { url, episodeName, season } = formatName(episode);
+      return {
+        mediaInfo: {
+          contentUrl: url,
+          metadata: {
+            title: episodeName,
+            subtitle: season,
+          },
+        },
+        preloadTime: 30,
+      };
+    });
+    shuffleArray(items);
+    client?.loadMedia({
+      queueData: {
+        items,
+      },
+    });
+  };
+
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app! kkk</Text>
       <StatusBar style="auto" />
-      <MyComponent />
+      <View style={styles.topButtons}>
+        <TouchableOpacity onPress={randomCast}>
+          <Text>Random</Text>
+        </TouchableOpacity>
+        <CastButton style={{ width: 24, height: 24, tintColor: "black" }} />
+      </View>
+      <FlatList
+        data={filteredEpisodes}
+        renderItem={renderItem}
+        keyExtractor={(item) => item}
+      />
+      <MediaControls />
     </View>
   );
 }
@@ -20,25 +75,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  topButtons: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginTop: 40,
+    padding: 20,
+    width: "100%",
+  },
 });
-
-function MyComponent() {
-  // This will automatically rerender when client is connected to a device
-  // (after pressing the button that's rendered below)
-  const client = useRemoteMediaClient();
-
-  if (client) {
-    // Send the media to your Cast device as soon as we connect to a device
-    // (though you'll probably want to call this later once user clicks on a video or something)
-    client.loadMedia({
-      mediaInfo: {
-        contentUrl:
-          "https://bafybeiermzzq7elgjtynvtv5t2ynkz3xvubi726hngo6bi3dgbpph5ueku.ipfs.dweb.link/Los%20Simpsons/Temporada%2006/Los%20Simpsons%206x01%20-%20El%20diab%C3%B3lico%20Bart.mp4",
-      },
-    });
-  }
-
-  // This will render native Cast button.
-  // When a user presses it, a Cast dialog will prompt them to select a Cast device to connect to.
-  return <CastButton style={{ width: 24, height: 24, tintColor: "black" }} />;
-}
