@@ -2,24 +2,20 @@ import React from "react";
 import { CastButton, useRemoteMediaClient } from "react-native-google-cast";
 import {
   StyleSheet,
-  FlatList,
+  SectionList,
   View,
   StatusBar,
   TouchableOpacity,
   Text,
 } from "react-native";
-import { episodes } from "./episodes";
 import { Item } from "./Item";
 import { MediaControls } from "./MediaControls";
-import { formatName } from "./utils";
+import { getSectionsEpisodes } from "./utils";
 
 export function Home() {
   const client = useRemoteMediaClient();
 
-  const renderItem = ({ item }) => <Item name={item} />;
-  const filteredEpisodes = episodes.filter((episode) =>
-    episode.endsWith(".mp4")
-  );
+  const sectionsEpisodes = getSectionsEpisodes();
 
   const shuffleArray = (array) => {
     for (let i = array.length - 1; i > 0; i--) {
@@ -28,8 +24,9 @@ export function Home() {
     }
   };
   const randomCast = () => {
-    const items = filteredEpisodes.slice(0, 400).map((episode) => {
-      const { url, episodeName, season } = formatName(episode);
+    const flattenList = sectionsEpisodes.map((section) => section.data).flat();
+    const items = flattenList.map((episode) => {
+      const { url, episodeName, season } = episode;
       return {
         mediaInfo: {
           contentUrl: url,
@@ -58,10 +55,13 @@ export function Home() {
         </TouchableOpacity>
         <CastButton style={{ width: 24, height: 24, tintColor: "black" }} />
       </View>
-      <FlatList
-        data={filteredEpisodes}
-        renderItem={renderItem}
-        keyExtractor={(item) => item}
+      <SectionList
+        sections={sectionsEpisodes}
+        keyExtractor={(item, index) => item + index}
+        renderItem={({ item }) => <Item item={item} />}
+        renderSectionHeader={({ section: { season } }) => (
+          <Text style={styles.header}>{season}</Text>
+        )}
       />
       <MediaControls />
     </View>
@@ -81,5 +81,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     padding: 20,
     width: "100%",
+  },
+  header: {
+    backgroundColor: "green",
+    padding: 5,
   },
 });

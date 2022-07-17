@@ -1,3 +1,6 @@
+import { seasons } from "./episodesHD";
+import { seasonsServers } from "./serverList";
+
 export const formatName = (name, serverUrl) => {
   const baseUrl =
     serverUrl ??
@@ -15,3 +18,13 @@ export const formatName = (name, serverUrl) => {
     season: splittedNameWithSeason[0],
   };
 };
+
+export const getSectionsEpisodes = () =>
+  seasons.map((season, index) => ({
+    season: `Temporada ${index + 1}`,
+    data: season.map((episode) => ({
+      episodeName: episode,
+      url: `${seasonsServers[index]}/${encodeURIComponent(episode)}`,
+      season: `Temporada ${index + 1}`,
+    })),
+  }));

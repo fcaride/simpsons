@@ -4,8 +4,9 @@ import { useNavigation } from "@react-navigation/native";
 
 import { formatName } from "./utils";
 
-export const Item = ({ name }) => {
-  const { url, episodeName, nameWithSeason, season } = formatName(name);
+export const Item = ({ item }) => {
+  const { episodeName, url } = item;
+  //const { url, episodeName, nameWithSeason, season } = formatName(name);
   const navigation = useNavigation();
 
   const client = useRemoteMediaClient();
@@ -20,13 +21,12 @@ export const Item = ({ name }) => {
               contentUrl: url,
               metadata: {
                 title: episodeName,
-                subtitle: season,
               },
             },
           })
         }
       >
-        <Text style={styles.text}>{nameWithSeason.replace(".mp4", "")}</Text>
+        <Text style={styles.text}>{episodeName}</Text>
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => navigation.navigate("VideoPlayer", { url })}
