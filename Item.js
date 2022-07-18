@@ -1,4 +1,4 @@
-import { TouchableOpacity, Text, StyleSheet } from "react-native";
+import { TouchableOpacity, Text, StyleSheet, Dimensions } from "react-native";
 import {
   useRemoteMediaClient,
   useCastState,
@@ -38,15 +38,9 @@ export const Item = ({ item }) => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 15,
-    paddingBottom: 15,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
+    width: Dimensions.get("window").width,
+    padding: 20,
     borderBottomWidth: 1,
-    borderColor: "grey",
-  },
-  leftButton: {
-    width: "80%",
+    borderColor: "blue",
   },
 });

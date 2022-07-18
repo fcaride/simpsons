@@ -1,5 +1,5 @@
-import React from "react";
-import { StyleSheet, SectionList, View, Text } from "react-native";
+import React, { useEffect } from "react";
+import { StyleSheet, SectionList, SafeAreaView, Text } from "react-native";
 import { Item } from "./Item";
 import { MediaControls } from "./MediaControls";
 import { getSectionsEpisodes } from "./utils";
@@ -7,8 +7,16 @@ import { getSectionsEpisodes } from "./utils";
 export function Home() {
   const sectionsEpisodes = getSectionsEpisodes();
 
+  useEffect(() => {
+    const flattenList = sectionsEpisodes.map((section) => section.data).flat();
+    flattenList.forEach(async (episode) => {
+      fetch(episode.url).then((response) => console.log(response));
+      await new Promise((r) => setTimeout(r, 2000));
+    });
+  }, [sectionsEpisodes]);
+
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <SectionList
         sections={sectionsEpisodes}
         keyExtractor={(item, index) => item + index}
@@ -18,7 +26,7 @@ export function Home() {
         )}
       />
       <MediaControls />
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -29,15 +37,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  topButtons: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    padding: 20,
-    width: "100%",
-  },
   header: {
     backgroundColor: "yellow",
     padding: 5,
+    fontSize: 20,
+    flex: 1,
   },
 });
