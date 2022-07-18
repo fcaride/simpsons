@@ -22,8 +22,8 @@ export const formatName = (name, serverUrl) => {
 export const getSectionsEpisodes = () =>
   seasons.map((season, index) => ({
     season: `Temporada ${index + 1}`,
-    data: season.map((episode) => ({
-      episodeName: episode,
+    data: season.map((episode, episodeNumber) => ({
+      episodeName: `${episodeNumber + 1} ${/ (.*?)\./.exec(episode)}`,
       url: `${seasonsServers[index]}/${encodeURIComponent(episode)}`,
       season: `Temporada ${index + 1}`,
     })),

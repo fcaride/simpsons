@@ -3,11 +3,14 @@ import {
   useRemoteMediaClient,
   useMediaStatus,
   MediaPlayerState,
+  useCastState,
+  CastState,
 } from "react-native-google-cast";
 
 export const MediaControls = () => {
   const client = useRemoteMediaClient();
   const mediaStatus = useMediaStatus();
+  const castState = useCastState();
 
   const statusButton =
     mediaStatus?.playerState === MediaPlayerState.PLAYING ? (
@@ -21,21 +24,23 @@ export const MediaControls = () => {
     );
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => client?.queuePrev()}
-      >
-        <Text style={styles.textButton}>Prev</Text>
-      </TouchableOpacity>
-      {statusButton}
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => client?.queueNext()}
-      >
-        <Text style={styles.textButton}>Next</Text>
-      </TouchableOpacity>
-    </View>
+    castState === CastState.CONNECTED && (
+      <View style={styles.container}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => client?.queuePrev()}
+        >
+          <Text style={styles.textButton}>Prev</Text>
+        </TouchableOpacity>
+        {statusButton}
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => client?.queueNext()}
+        >
+          <Text style={styles.textButton}>Next</Text>
+        </TouchableOpacity>
+      </View>
+    )
   );
 };
 
