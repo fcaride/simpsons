@@ -1,18 +1,18 @@
 // In App.js in a new project
 
-import * as React from "react";
-import {
-  useRemoteMediaClient,
-  useCastState,
-  CastState,
-} from "react-native-google-cast";
-import { CastButton } from "react-native-google-cast";
 import { NavigationContainer } from "@react-navigation/native";
-import { TouchableOpacity, Text } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import * as React from "react";
+import { Text, TouchableOpacity } from "react-native";
+import {
+  CastButton,
+  CastState,
+  useCastState,
+  useRemoteMediaClient,
+} from "react-native-google-cast";
 import { Home } from "./Home";
+import { getSectionsEpisodesStorage } from "./utils";
 import { VideoPlayer } from "./VideoPlayer";
-import { getSectionsEpisodes } from "./utils";
 
 const Stack = createNativeStackNavigator();
 
@@ -27,7 +27,7 @@ function App() {
   const client = useRemoteMediaClient();
   const castState = useCastState();
 
-  const sectionsEpisodes = getSectionsEpisodes();
+  const sectionsEpisodes = getSectionsEpisodesStorage();
 
   const randomCast = () => {
     const flattenList = sectionsEpisodes.map((section) => section.data).flat();

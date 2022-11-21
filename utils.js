@@ -1,4 +1,4 @@
-import { seasons } from "./episodesHD";
+import { episodes } from "./episodesHD";
 import { seasonsServers } from "./serverList";
 
 // export const formatName = (name, serverUrl) => {
@@ -26,11 +26,23 @@ const formatName = (name) => {
 };
 
 export const getSectionsEpisodes = () =>
-  seasons.map((season, index) => ({
+  episodes.map((season, index) => ({
     season: `Temporada ${index + 1}`,
     data: season.map((episode, episodeNumber) => ({
       episodeName: `${episodeNumber + 1} - ${formatName(episode)}`,
-      url: `${seasonsServers[index]}/${encodeURIComponent(episode)}`,
+      url: `http://simpsonslatino.hopto.org/Simpsons/${encodeURIComponent(
+        episode
+      )}`,
+      season: `Temporada ${index + 1}`,
+    })),
+  }));
+
+export const getSectionsEpisodesStorage = () =>
+  seasonsServers.map((url, index) => ({
+    season: `Temporada ${index + 1}`,
+    data: episodes[index].map((episode, episodeNumber) => ({
+      episodeName: `${episodeNumber + 1} - ${formatName(episode)}`,
+      url: `${url}/${encodeURIComponent(episode)}`,
       season: `Temporada ${index + 1}`,
     })),
   }));

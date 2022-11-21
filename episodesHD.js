@@ -1,4 +1,4 @@
-export const seasons = [
+export const episodes = [
   [
     "01/01x01 - Especial de Navidad.mp4",
     "01/01x02 - Bart es un genio.mp4",

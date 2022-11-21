@@ -1,19 +1,11 @@
-import React, { useEffect } from "react";
-import { StyleSheet, SectionList, SafeAreaView, Text } from "react-native";
+import React from "react";
+import { SafeAreaView, SectionList, StyleSheet, Text } from "react-native";
 import { Item } from "./Item";
 import { MediaControls } from "./MediaControls";
-import { getSectionsEpisodes } from "./utils";
+import { getSectionsEpisodesStorage } from "./utils";
 
 export function Home() {
-  const sectionsEpisodes = getSectionsEpisodes();
-
-  useEffect(() => {
-    const flattenList = sectionsEpisodes.map((section) => section.data).flat();
-    flattenList.forEach(async (episode) => {
-      fetch(episode.url).then((response) => console.log(response));
-      await new Promise((r) => setTimeout(r, 2000));
-    });
-  }, [sectionsEpisodes]);
+  const sectionsEpisodes = getSectionsEpisodesStorage();
 
   return (
     <SafeAreaView style={styles.container}>
