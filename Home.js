@@ -2,10 +2,10 @@ import React from "react";
 import { SafeAreaView, SectionList, StyleSheet, Text } from "react-native";
 import { Item } from "./Item";
 import { MediaControls } from "./MediaControls";
-import { getSectionsEpisodesStorage } from "./utils";
+import { getSectionsEpisodes } from "./utils";
 
 export function Home() {
-  const sectionsEpisodes = getSectionsEpisodesStorage();
+  const sectionsEpisodes = getSectionsEpisodes();
 
   return (
     <SafeAreaView style={styles.container}>

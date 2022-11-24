@@ -11,7 +11,7 @@ import {
   useRemoteMediaClient,
 } from "react-native-google-cast";
 import { Home } from "./Home";
-import { getSectionsEpisodesStorage } from "./utils";
+import { getSectionsEpisodes } from "./utils";
 import { VideoPlayer } from "./VideoPlayer";
 
 const Stack = createNativeStackNavigator();
@@ -27,7 +27,7 @@ function App() {
   const client = useRemoteMediaClient();
   const castState = useCastState();
 
-  const sectionsEpisodes = getSectionsEpisodesStorage();
+  const sectionsEpisodes = getSectionsEpisodes();
 
   const randomCast = () => {
     const flattenList = sectionsEpisodes.map((section) => section.data).flat();

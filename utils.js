@@ -25,24 +25,28 @@ const formatName = (name) => {
   return formattedName[0].replace("- ", "").replace(".", "");
 };
 
-export const getSectionsEpisodes = () =>
-  episodes.map((season, index) => ({
-    season: `Temporada ${index + 1}`,
-    data: season.map((episode, episodeNumber) => ({
-      episodeName: `${episodeNumber + 1} - ${formatName(episode)}`,
-      url: `http://simpsonslatino.hopto.org/Simpsons/${encodeURIComponent(
-        episode
-      )}`,
-      season: `Temporada ${index + 1}`,
-    })),
-  }));
+export const getSectionsEpisodes = () => {
+  const useWeb3 = true;
 
-export const getSectionsEpisodesStorage = () =>
-  seasonsServers.map((url, index) => ({
-    season: `Temporada ${index + 1}`,
-    data: episodes[index].map((episode, episodeNumber) => ({
-      episodeName: `${episodeNumber + 1} - ${formatName(episode)}`,
-      url: `${url}/${encodeURIComponent(episode)}`,
+  if (useWeb3) {
+    return seasonsServers.map((url, index) => ({
       season: `Temporada ${index + 1}`,
-    })),
-  }));
+      data: episodes[index].map((episode, episodeNumber) => ({
+        episodeName: `${episodeNumber + 1} - ${formatName(episode)}`,
+        url: `${url}/${encodeURIComponent(episode)}`,
+        season: `Temporada ${index + 1}`,
+      })),
+    }));
+  } else {
+    return episodes.map((season, index) => ({
+      season: `Temporada ${index + 1}`,
+      data: season.map((episode, episodeNumber) => ({
+        episodeName: `${episodeNumber + 1} - ${formatName(episode)}`,
+        url: `http://simpsonslatino.hopto.org/Simpsons/${encodeURIComponent(
+          episode
+        )}`,
+        season: `Temporada ${index + 1}`,
+      })),
+    }));
+  }
+};
