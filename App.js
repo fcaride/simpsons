@@ -10,6 +10,11 @@ import {
   useCastState,
   useRemoteMediaClient,
 } from "react-native-google-cast";
+
+import {
+  useFonts,
+  VarelaRound_400Regular,
+} from "@expo-google-fonts/varela-round";
 import { Home } from "./Home";
 import { getSectionsEpisodes } from "./utils";
 import { VideoPlayer } from "./VideoPlayer";
@@ -24,11 +29,17 @@ const shuffleArray = (array) => {
 };
 
 function App() {
+  let [fontsLoaded] = useFonts({
+    VarelaRound_400Regular,
+  });
+
   const client = useRemoteMediaClient();
   const castState = useCastState();
 
   const sectionsEpisodes = getSectionsEpisodes();
-
+  if (!fontsLoaded) {
+    return null;
+  }
   const randomCast = () => {
     const flattenList = sectionsEpisodes.map((section) => section.data).flat();
     const items = flattenList.map((episode) => {
@@ -59,6 +70,13 @@ function App() {
           name="Home"
           component={Home}
           options={{
+            headerTitle: "",
+            headerStyle: {
+              backgroundColor: "#FED811",
+            },
+            headerTitleStyle: {
+              color: "#07537f",
+            },
             headerRight: () => (
               <CastButton
                 style={{ width: 24, height: 24, tintColor: "black" }}
@@ -67,12 +85,26 @@ function App() {
             headerLeft: () =>
               castState === CastState.CONNECTED && (
                 <TouchableOpacity onPress={randomCast} style={{ padding: 10 }}>
-                  <Text>Random</Text>
+                  <Text style={{ fontFamily: "VarelaRound_400Regular" }}>
+                    Random
+                  </Text>
                 </TouchableOpacity>
               ),
           }}
         />
-        <Stack.Screen name="VideoPlayer" component={VideoPlayer} />
+        <Stack.Screen
+          name="VideoPlayer"
+          component={VideoPlayer}
+          options={{
+            headerTitle: "",
+            headerStyle: {
+              backgroundColor: "#FED811",
+            },
+            headerTitleStyle: {
+              color: "#07537f",
+            },
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

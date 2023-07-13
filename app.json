@@ -30,6 +30,9 @@
         "projectId": "d2069ad7-d70e-4ea8-a9e4-99e064dc2be7"
       }
     },
-    "plugins": ["@config-plugins/react-native-google-cast"]
+    "plugins": [
+      "@config-plugins/react-native-google-cast",
+      "expo-screen-orientation"
+    ]
   }
 }

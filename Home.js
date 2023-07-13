@@ -49,19 +49,26 @@ export function Home() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "white",
     alignItems: "center",
     justifyContent: "center",
   },
   header: {
-    backgroundColor: "yellow",
-    padding: 5,
+    backgroundColor: "#D2B17D",
+    paddingLeft: 15,
+    paddingVertical: 10,
     fontSize: 20,
     flex: 1,
+    color: "#07537f",
+    fontFamily: "VarelaRound_400Regular",
   },
   inputSearch: {
-    padding: 15,
-    fontSize: 20,
+    paddingVertical: 10,
+    paddingLeft: 15,
+    fontSize: 16,
     alignSelf: "flex-start",
+    fontFamily: "VarelaRound_400Regular",
+    backgroundColor: "white",
+    width: "100%",
   },
 });

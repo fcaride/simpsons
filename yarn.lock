@@ -1156,6 +1156,21 @@
   resolved "https://registry.npmjs.org/@config-plugins/react-native-google-cast/-/react-native-google-cast-5.0.0.tgz"
   integrity sha512-Vc4Ax4wZuW3VTwXmKx0TZM5+txe7NiMpJlP/cKrjTJfDL7fa7K5BHkxtL7TicW3h1FAS+fCKXw4TTlhv7KQ9uw==
 
+"@expo-google-fonts/inter@^0.2.3":
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/@expo-google-fonts/inter/-/inter-0.2.3.tgz#82bf7224bb76fc6614a00393a9e9ee4d6dd09dcb"
+  integrity sha512-iHK9FI+dnE45X5c2Z5hSFwNH4zUWethizpbv3XUn0FIGw5jwvzriENz0a6wCdkI4/d+1QkurnHo5XHti7TbNJA==
+
+"@expo-google-fonts/varela-round@^0.2.3":
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/@expo-google-fonts/varela-round/-/varela-round-0.2.3.tgz#48b80cf4eba7e323097b89efc913f1ed5c60bf78"
+  integrity sha512-IOWskk89nXK6sBDDqImvntMbS1uYlXd/DUGifOUMLN4IDiYKBQYmnCzvdTdrySBBz3x5ShFDX98qWLf5Mw1uVQ==
+
+"@expo-google-fonts/varela@^0.2.3":
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/@expo-google-fonts/varela/-/varela-0.2.3.tgz#e0956358f602d57bf150f7bfbcc1db095647fe17"
+  integrity sha512-CKfVrwep+0hR5BRGDMhNqTorxvFoeV2mM2apsSGTPIx4pk/+pSKOZbcEjNKF+w4qjwqq1hYLqZTb3laqkqGGuQ==
+
 "@expo/bunyan@4.0.0", "@expo/bunyan@^4.0.0":
   version "4.0.0"
   resolved "https://registry.npmjs.org/@expo/bunyan/-/bunyan-4.0.0.tgz"

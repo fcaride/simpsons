@@ -1,6 +1,6 @@
 import { Video } from "expo-av";
 import * as ScreenOrientation from "expo-screen-orientation";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ActivityIndicator, Dimensions, StyleSheet, View } from "react-native";
 
 export function VideoPlayer({ route }) {
@@ -19,6 +19,12 @@ export function VideoPlayer({ route }) {
     }
   }
 
+  useEffect(() => {
+    if (status.isLoaded) {
+      video?.current?.presentFullscreenPlayer();
+    }
+  }, [video.current, status.isLoaded]);
+
   return (
     <View style={styles.container}>
       {isPreloading && <ActivityIndicator size="large" />}
@@ -28,10 +34,10 @@ export function VideoPlayer({ route }) {
         source={{
           uri: url,
         }}
+        onFullscreenUpdate={setOrientation}
         useNativeControls
         resizeMode="cover"
         shouldPlay
-        onFullscreenUpdate={setOrientation}
         onPlaybackStatusUpdate={(status) => setStatus(() => status)}
         onLoadStart={() => setIsPreloading(true)}
         onReadyForDisplay={() => setIsPreloading(false)}
