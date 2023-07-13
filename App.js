@@ -1,22 +1,81 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
-import { CastButton } from "react-native-google-cast";
+// In App.js in a new project
 
-export default function App() {
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import * as React from "react";
+import { Text, TouchableOpacity } from "react-native";
+import {
+  CastButton,
+  CastState,
+  useCastState,
+  useRemoteMediaClient,
+} from "react-native-google-cast";
+import { Home } from "./Home";
+import { getSectionsEpisodes } from "./utils";
+import { VideoPlayer } from "./VideoPlayer";
+
+const Stack = createNativeStackNavigator();
+
+const shuffleArray = (array) => {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+};
+
+function App() {
+  const client = useRemoteMediaClient();
+  const castState = useCastState();
+
+  const sectionsEpisodes = getSectionsEpisodes();
+
+  const randomCast = () => {
+    const flattenList = sectionsEpisodes.map((section) => section.data).flat();
+    const items = flattenList.map((episode) => {
+      const { url, episodeName, season } = episode;
+      return {
+        mediaInfo: {
+          contentUrl: url,
+          metadata: {
+            title: episodeName,
+            subtitle: season,
+          },
+        },
+        preloadTime: 30,
+      };
+    });
+    shuffleArray(items);
+    client?.loadMedia({
+      queueData: {
+        items,
+      },
+    });
+  };
+
   return (
-    <View style={styles.container}>
-      <CastButton style={{ tintColor: "black", height: 48, width: 48 }} />
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Home"
+          component={Home}
+          options={{
+            headerRight: () => (
+              <CastButton
+                style={{ width: 24, height: 24, tintColor: "black" }}
+              />
+            ),
+            headerLeft: () =>
+              castState === CastState.CONNECTED && (
+                <TouchableOpacity onPress={randomCast} style={{ padding: 10 }}>
+                  <Text>Random</Text>
+                </TouchableOpacity>
+              ),
+          }}
+        />
+        <Stack.Screen name="VideoPlayer" component={VideoPlayer} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
+export default App;
