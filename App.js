@@ -90,8 +90,8 @@ function App() {
         },
       });
     } else {
-      const randomList = shuffleArray(flattenList);
-      const { url } = randomList[0];
+      shuffleArray(flattenList);
+      const { url } = flattenList[0];
       navigation.navigate("VideoPlayer", { url });
     }
   };
