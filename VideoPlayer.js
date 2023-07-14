@@ -1,12 +1,7 @@
 import { Video } from "expo-av";
 import * as ScreenOrientation from "expo-screen-orientation";
 import { useEffect, useRef, useState } from "react";
-import {
-  ActivityIndicator,
-  Dimensions,
-  ImageBackground,
-  StyleSheet,
-} from "react-native";
+import { Dimensions, ImageBackground, StyleSheet } from "react-native";
 
 export function VideoPlayer({ route }) {
   const video = useRef(null);
@@ -36,7 +31,6 @@ export function VideoPlayer({ route }) {
       resizeMode="cover"
       style={styles.container}
     >
-      {isPreloading && <ActivityIndicator size="large" />}
       <Video
         ref={video}
         style={{

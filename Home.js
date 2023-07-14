@@ -49,7 +49,7 @@ export function Home({ navigation }) {
         />
       </ImageBackground>
 
-      <ShakeButton onPress={playRandom} />
+      <ShakeButton onPress={playRandom(navigation)} />
     </SafeAreaView>
   );
 }

@@ -58,7 +58,7 @@ const shuffleArray = (array) => {
   }
 };
 
-export const playRandom = (navigation, castState, client) => () => {
+export const playRandom = (navigation) => () => {
   const sectionsEpisodes = getSectionsEpisodes();
   const flattenList = sectionsEpisodes.map((section) => section.data).flat();
 
