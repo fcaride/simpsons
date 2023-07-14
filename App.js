@@ -47,6 +47,7 @@ async function onFetchUpdateAsync() {
 
 function App() {
   useEffect(() => {
+    alert(`Error fetching latest Expo update: `);
     const subscription = AppState.addEventListener("change", (nextAppState) => {
       if (nextAppState === "active") {
         onFetchUpdateAsync();
