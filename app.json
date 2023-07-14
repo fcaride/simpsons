@@ -7,7 +7,7 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.jpg",
+      "image": "./assets/splash.png",
       "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
@@ -18,21 +18,23 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.lossimpsons"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "androidStatusBar": {
+      "backgroundColor": "#FED811",
+      "translucent": false
     },
     "extra": {
       "eas": {
         "projectId": "d2069ad7-d70e-4ea8-a9e4-99e064dc2be7"
       }
     },
-    "plugins": [
-      "@config-plugins/react-native-google-cast",
-      "expo-screen-orientation"
-    ]
+    "plugins": ["@config-plugins/react-native-google-cast"]
   }
 }
