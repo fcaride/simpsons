@@ -17,7 +17,7 @@ import {
 } from "@expo-google-fonts/varela-round";
 import { FontAwesome } from "@expo/vector-icons";
 import * as Updates from "expo-updates";
-import { Alert, AppState } from "react-native";
+import { AppState } from "react-native";
 import { Home } from "./Home";
 import { getSectionsEpisodes } from "./utils";
 import { VideoPlayer } from "./VideoPlayer";
@@ -39,15 +39,11 @@ async function onFetchUpdateAsync() {
       await Updates.fetchUpdateAsync();
       await Updates.reloadAsync();
     }
-  } catch (error) {
-    // You can also add an alert() to see the error message in case of an error when fetching updates.
-    Alert(`Error fetching latest Expo update: ${error}`);
-  }
+  } catch (error) {}
 }
 
 function App() {
   useEffect(() => {
-    Alert(`Error fetching latest Expo update: `);
     const subscription = AppState.addEventListener("change", (nextAppState) => {
       if (nextAppState === "active") {
         onFetchUpdateAsync();
