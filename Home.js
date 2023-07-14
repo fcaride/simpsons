@@ -31,7 +31,7 @@ export function Home() {
         style={styles.inputSearch}
         value={query}
         onChangeText={setQuery}
-        placeholder="Buscar episodio"
+        placeholder="Buscar episodioooooo"
       />
       <SectionList
         sections={query ? episodes : sectionsEpisodes}
