@@ -36,7 +36,7 @@ export function VideoPlayer({ route }) {
         }}
         onFullscreenUpdate={setOrientation}
         useNativeControls
-        resizeMode="cover"
+        resizeMode="contain"
         shouldPlay
         onPlaybackStatusUpdate={(status) => setStatus(() => status)}
         onLoadStart={() => setIsPreloading(true)}

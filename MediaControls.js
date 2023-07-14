@@ -1,10 +1,10 @@
-import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import {
-  useRemoteMediaClient,
-  useMediaStatus,
+  CastState,
   MediaPlayerState,
   useCastState,
-  CastState,
+  useMediaStatus,
+  useRemoteMediaClient,
 } from "react-native-google-cast";
 
 export const MediaControls = () => {
@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     paddingBottom: 10,
-    backgroundColor: "black",
+    backgroundColor: "#D2B17D",
     width: "100%",
   },
   button: {
