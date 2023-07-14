@@ -1,38 +1,11 @@
 import { useNavigation } from "@react-navigation/native";
 import { Dimensions, StyleSheet, Text, TouchableOpacity } from "react-native";
-import {
-  CastState,
-  useCastState,
-  useRemoteMediaClient,
-} from "react-native-google-cast";
 
 export const Item = ({ item }) => {
   const { episodeName, url, season } = item;
-  const castState = useCastState();
   const navigation = useNavigation();
 
-  const client = useRemoteMediaClient();
-
-  const onPressItem = () => {
-    if (castState === CastState.CONNECTED) {
-      client?.loadMedia({
-        mediaInfo: {
-          contentUrl: url,
-          metadata: {
-            title: episodeName,
-            subtitle: season,
-            images: [
-              {
-                url: "https://e0.pxfuel.com/wallpapers/728/318/desktop-wallpaper-the-simpsons-family-watching-tv-resolution-tv-series-and-background.jpg",
-              },
-            ],
-          },
-        },
-      });
-    } else {
-      navigation.navigate("VideoPlayer", { url });
-    }
-  };
+  const onPressItem = () => navigation.navigate("VideoPlayer", { url });
 
   return (
     <TouchableOpacity style={styles.container} onPress={onPressItem}>

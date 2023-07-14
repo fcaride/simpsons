@@ -3,7 +3,6 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useEffect } from "react";
-import { CastButton } from "react-native-google-cast";
 
 import {
   useFonts,
@@ -62,11 +61,6 @@ function App() {
             headerTitleStyle: {
               color: "#07537f",
             },
-            headerRight: () => (
-              <CastButton
-                style={{ width: 24, height: 24, tintColor: "black" }}
-              />
-            ),
           })}
         />
         <Stack.Screen

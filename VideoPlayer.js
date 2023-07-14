@@ -1,7 +1,12 @@
 import { Video } from "expo-av";
 import * as ScreenOrientation from "expo-screen-orientation";
 import { useEffect, useRef, useState } from "react";
-import { ActivityIndicator, Dimensions, StyleSheet, View } from "react-native";
+import {
+  ActivityIndicator,
+  Dimensions,
+  ImageBackground,
+  StyleSheet,
+} from "react-native";
 
 export function VideoPlayer({ route }) {
   const video = useRef(null);
@@ -21,16 +26,26 @@ export function VideoPlayer({ route }) {
 
   useEffect(() => {
     if (status.isLoaded) {
-      video?.current?.presentFullscreenPlayer();
+      //video?.current?.presentFullscreenPlayer();
     }
   }, [video.current, status.isLoaded]);
 
   return (
-    <View style={styles.container}>
+    <ImageBackground
+      source={require("./assets/nubecitas.jpeg")}
+      resizeMode="cover"
+      style={styles.container}
+    >
       {isPreloading && <ActivityIndicator size="large" />}
       <Video
         ref={video}
-        style={{ width: Dimensions.get("window").width, height: 220 }}
+        style={{
+          width: Dimensions.get("window").width,
+          height: "100%",
+          flex: 1,
+          justifyContent: "center",
+        }}
+        videoStyle={{ position: "relative" }}
         source={{
           uri: url,
         }}
@@ -54,7 +69,7 @@ export function VideoPlayer({ route }) {
           }}
         />
       )}
-    </View>
+    </ImageBackground>
   );
 }
 
@@ -63,5 +78,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     backgroundColor: "#ecf0f1",
+    alignItems: "center",
   },
 });

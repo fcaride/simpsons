@@ -1,4 +1,3 @@
-import { CastState } from "react-native-google-cast";
 import { episodes } from "./episodesHD";
 import { seasonsServers } from "./serverList";
 
@@ -63,29 +62,7 @@ export const playRandom = (navigation, castState, client) => () => {
   const sectionsEpisodes = getSectionsEpisodes();
   const flattenList = sectionsEpisodes.map((section) => section.data).flat();
 
-  if (castState === CastState.CONNECTED) {
-    const items = flattenList.map((episode) => {
-      const { url, episodeName, season } = episode;
-      return {
-        mediaInfo: {
-          contentUrl: url,
-          metadata: {
-            title: episodeName,
-            subtitle: season,
-          },
-        },
-        preloadTime: 30,
-      };
-    });
-    shuffleArray(items);
-    client?.loadMedia({
-      queueData: {
-        items,
-      },
-    });
-  } else {
-    shuffleArray(flattenList);
-    const { url } = flattenList[0];
-    navigation.navigate("VideoPlayer", { url });
-  }
+  shuffleArray(flattenList);
+  const { url } = flattenList[0];
+  navigation.navigate("VideoPlayer", { url });
 };

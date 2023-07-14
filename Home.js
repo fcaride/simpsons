@@ -1,25 +1,19 @@
 import React, { useMemo, useState } from "react";
 import {
-  Image,
   ImageBackground,
   SafeAreaView,
   SectionList,
   StyleSheet,
   Text,
   TextInput,
-  TouchableOpacity,
 } from "react-native";
-import { useCastState, useRemoteMediaClient } from "react-native-google-cast";
 import { Item } from "./Item";
-import { MediaControls } from "./MediaControls";
+import { ShakeButton } from "./ShakeButton";
 import { getSectionsEpisodes, playRandom } from "./utils";
 
 export function Home({ navigation }) {
   const sectionsEpisodes = getSectionsEpisodes();
   const [query, setQuery] = useState("");
-
-  const client = useRemoteMediaClient();
-  const castState = useCastState();
 
   const episodes = useMemo(() => {
     const filteredSections = sectionsEpisodes.map((sectionEpisode) => ({
@@ -55,16 +49,7 @@ export function Home({ navigation }) {
         />
       </ImageBackground>
 
-      <MediaControls />
-      <TouchableOpacity
-        onPress={playRandom(navigation, castState, client)}
-        style={styles.floatingButton}
-      >
-        <Image
-          style={{ width: 70, height: 70 }}
-          source={require("./assets/lacaja.png")}
-        />
-      </TouchableOpacity>
+      <ShakeButton onPress={playRandom} />
     </SafeAreaView>
   );
 }
