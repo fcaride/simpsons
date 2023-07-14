@@ -1,18 +1,24 @@
 import React, { useMemo, useState } from "react";
 import {
+  Image,
   SafeAreaView,
   SectionList,
   StyleSheet,
   Text,
   TextInput,
+  TouchableOpacity,
 } from "react-native";
+import { useCastState, useRemoteMediaClient } from "react-native-google-cast";
 import { Item } from "./Item";
 import { MediaControls } from "./MediaControls";
-import { getSectionsEpisodes } from "./utils";
+import { getSectionsEpisodes, playRandom } from "./utils";
 
-export function Home() {
+export function Home({ navigation }) {
   const sectionsEpisodes = getSectionsEpisodes();
   const [query, setQuery] = useState("");
+
+  const client = useRemoteMediaClient();
+  const castState = useCastState();
 
   const episodes = useMemo(() => {
     const filteredSections = sectionsEpisodes.map((sectionEpisode) => ({
@@ -42,6 +48,15 @@ export function Home() {
         )}
       />
       <MediaControls />
+      <TouchableOpacity
+        onPress={playRandom(navigation, castState, client)}
+        style={styles.floatingButton}
+      >
+        <Image
+          style={{ width: 70, height: 70 }}
+          source={require("./assets/lacaja.png")}
+        />
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }
@@ -70,5 +85,16 @@ const styles = StyleSheet.create({
     fontFamily: "VarelaRound_400Regular",
     backgroundColor: "white",
     width: "100%",
+  },
+  floatingButton: {
+    position: "absolute",
+    bottom: 30,
+    right: 30,
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+    backgroundColor: "#07537f",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
