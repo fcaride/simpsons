@@ -1,0 +1,21 @@
+{
+  "files": {
+    "main.js": "/static/js/main.7a5df9cf.js",
+    "static/js/922.0c2f7d93.js": "/static/js/922.0c2f7d93.js",
+    "static/media/lacaja.png": "/static/media/lacaja.b899d56d2a9f9fdafeab.png",
+    "static/media/VarelaRound_400Regular.ttf": "/static/media/VarelaRound_400Regular.e67ccd4a92677fdf8719.ttf",
+    "static/media/nubecitas.jpeg": "/static/media/nubecitas.51378e8cf26394d6c3a1.jpeg",
+    "favicon.ico": "/favicon.ico",
+    "index.html": "/index.html",
+    "favicon-32.png": "/favicon-32.png",
+    "favicon-16.png": "/favicon-16.png",
+    "manifest.json": "/manifest.json",
+    "serve.json": "/serve.json",
+    "main.7a5df9cf.js.map": "/static/js/main.7a5df9cf.js.map",
+    "922.0c2f7d93.js.map": "/static/js/922.0c2f7d93.js.map"
+  },
+  "entrypoints": [
+    "static/js/922.0c2f7d93.js",
+    "static/js/main.7a5df9cf.js"
+  ]
+}
