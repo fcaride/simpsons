@@ -3,7 +3,7 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
-import { Text, TouchableOpacity } from "react-native";
+import { TouchableOpacity } from "react-native";
 import {
   CastButton,
   CastState,
@@ -15,6 +15,7 @@ import {
   useFonts,
   VarelaRound_400Regular,
 } from "@expo-google-fonts/varela-round";
+import { FontAwesome } from "@expo/vector-icons";
 import { Home } from "./Home";
 import { getSectionsEpisodes } from "./utils";
 import { VideoPlayer } from "./VideoPlayer";
@@ -40,27 +41,33 @@ function App() {
   if (!fontsLoaded) {
     return null;
   }
-  const randomCast = () => {
+  const random = (navigation) => () => {
     const flattenList = sectionsEpisodes.map((section) => section.data).flat();
-    const items = flattenList.map((episode) => {
-      const { url, episodeName, season } = episode;
-      return {
-        mediaInfo: {
-          contentUrl: url,
-          metadata: {
-            title: episodeName,
-            subtitle: season,
+
+    if (castState === CastState.CONNECTED) {
+      const items = flattenList.map((episode) => {
+        const { url, episodeName, season } = episode;
+        return {
+          mediaInfo: {
+            contentUrl: url,
+            metadata: {
+              title: episodeName,
+              subtitle: season,
+            },
           },
+          preloadTime: 30,
+        };
+      });
+      shuffleArray(items);
+      client?.loadMedia({
+        queueData: {
+          items,
         },
-        preloadTime: 30,
-      };
-    });
-    shuffleArray(items);
-    client?.loadMedia({
-      queueData: {
-        items,
-      },
-    });
+      });
+    } else {
+      const { url } = flattenList[0];
+      navigation.navigate("VideoPlayer", { url });
+    }
   };
 
   return (
@@ -69,7 +76,7 @@ function App() {
         <Stack.Screen
           name="Home"
           component={Home}
-          options={{
+          options={({ navigation }) => ({
             headerTitle: "",
             headerStyle: {
               backgroundColor: "#FED811",
@@ -82,15 +89,15 @@ function App() {
                 style={{ width: 24, height: 24, tintColor: "black" }}
               />
             ),
-            headerLeft: () =>
-              castState === CastState.CONNECTED && (
-                <TouchableOpacity onPress={randomCast} style={{ padding: 10 }}>
-                  <Text style={{ fontFamily: "VarelaRound_400Regular" }}>
-                    Random
-                  </Text>
-                </TouchableOpacity>
-              ),
-          }}
+            headerLeft: () => (
+              <TouchableOpacity
+                onPress={random(navigation)}
+                style={{ padding: 10 }}
+              >
+                <FontAwesome name="random" size={24} color="black" />
+              </TouchableOpacity>
+            ),
+          })}
         />
         <Stack.Screen
           name="VideoPlayer"
