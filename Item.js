@@ -47,11 +47,11 @@ const styles = StyleSheet.create({
     padding: 20,
     borderBottomWidth: 0.3,
     borderColor: "black",
-    backgroundColor: "#fff5ce",
+    backgroundColor: "rgba(255,255,255,0.5)",
   },
   text: {
     fontSize: 16,
-    color: "#07537f",
+    color: "black",
 
     fontFamily: "VarelaRound_400Regular",
   },

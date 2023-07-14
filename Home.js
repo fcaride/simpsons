@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from "react";
 import {
   Image,
+  ImageBackground,
   SafeAreaView,
   SectionList,
   StyleSheet,
@@ -39,14 +40,21 @@ export function Home({ navigation }) {
         onChangeText={setQuery}
         placeholder="Buscar episodio"
       />
-      <SectionList
-        sections={query ? episodes : sectionsEpisodes}
-        keyExtractor={(item, index) => item + index}
-        renderItem={({ item }) => <Item item={item} />}
-        renderSectionHeader={({ section: { season } }) => (
-          <Text style={styles.header}>{season}</Text>
-        )}
-      />
+      <ImageBackground
+        source={require("./assets/nubecitas.jpeg")}
+        resizeMode="cover"
+        style={{ flex: 1 }}
+      >
+        <SectionList
+          sections={query ? episodes : sectionsEpisodes}
+          keyExtractor={(item, index) => item + index}
+          renderItem={({ item }) => <Item item={item} />}
+          renderSectionHeader={({ section: { season } }) => (
+            <Text style={styles.header}>{season}</Text>
+          )}
+        />
+      </ImageBackground>
+
       <MediaControls />
       <TouchableOpacity
         onPress={playRandom(navigation, castState, client)}
@@ -69,12 +77,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   header: {
-    backgroundColor: "#D2B17D",
+    backgroundColor: "#07537f",
     paddingLeft: 15,
     paddingVertical: 10,
     fontSize: 20,
     flex: 1,
-    color: "#07537f",
+    color: "white",
     fontFamily: "VarelaRound_400Regular",
   },
   inputSearch: {
