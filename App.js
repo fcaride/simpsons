@@ -90,7 +90,7 @@ function App() {
         },
       });
     } else {
-      const { url } = flattenList[0];
+      const { url } = shuffleArray(flattenList)[0];
       navigation.navigate("VideoPlayer", { url });
     }
   };
