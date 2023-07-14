@@ -11,16 +11,14 @@
       "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.lossimpsons"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/icon.png",
+        "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.lossimpsons"
@@ -37,9 +35,7 @@
         "projectId": "d2069ad7-d70e-4ea8-a9e4-99e064dc2be7"
       }
     },
-    "plugins": [
-      "@config-plugins/react-native-google-cast"
-    ],
+    "plugins": ["@config-plugins/react-native-google-cast"],
     "runtimeVersion": {
       "policy": "sdkVersion"
     },
