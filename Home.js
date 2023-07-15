@@ -66,7 +66,6 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
     paddingVertical: 10,
     fontSize: 20,
-    flex: 1,
     color: "white",
     fontFamily: "VarelaRound_400Regular",
   },
