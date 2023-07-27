@@ -1,6 +1,6 @@
 import { Video } from "expo-av";
 import * as ScreenOrientation from "expo-screen-orientation";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Dimensions, ImageBackground, StyleSheet } from "react-native";
 
 export function VideoPlayer({ route }) {
@@ -8,7 +8,8 @@ export function VideoPlayer({ route }) {
   const [status, setStatus] = useState({});
   const [isPreloading, setIsPreloading] = useState();
   const [isError, setIsError] = useState(false);
-  const { url } = route.params;
+  const [indexPlaying, setIndexPlaying] = useState(0);
+  const { urls } = route.params;
   function setOrientation() {
     if (Dimensions.get("window").height > Dimensions.get("window").width) {
       //Device is in portrait mode, rotate to landscape mode.
@@ -19,11 +20,19 @@ export function VideoPlayer({ route }) {
     }
   }
 
-  useEffect(() => {
-    if (status.isLoaded) {
-      //video?.current?.presentFullscreenPlayer();
+  const statusChanged = async (status) => {
+    setStatus(status);
+    if (urls.length <= 1) {
+      return;
     }
-  }, [video.current, status.isLoaded]);
+    if (status.didJustFinish) {
+      await video.current.loadAsync({
+        uri: urls[indexPlaying + 1],
+      });
+      video.current.playAsync();
+      setIndexPlaying((prev) => prev + 1);
+    }
+  };
 
   return (
     <ImageBackground
@@ -41,13 +50,13 @@ export function VideoPlayer({ route }) {
         }}
         videoStyle={{ position: "relative" }}
         source={{
-          uri: url,
+          uri: urls[indexPlaying],
         }}
         onFullscreenUpdate={setOrientation}
         useNativeControls
         resizeMode="contain"
         shouldPlay
-        onPlaybackStatusUpdate={(status) => setStatus(() => status)}
+        onPlaybackStatusUpdate={statusChanged}
         onLoadStart={() => setIsPreloading(true)}
         onReadyForDisplay={() => setIsPreloading(false)}
         onError={() => {
@@ -72,6 +81,5 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     backgroundColor: "#ecf0f1",
-    alignItems: "center",
   },
 });
