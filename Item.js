@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import { Dimensions, StyleSheet, Text, TouchableOpacity } from "react-native";
 
 export const Item = ({ item }) => {
   const { episodeName, url, season } = item;
@@ -16,6 +16,7 @@ export const Item = ({ item }) => {
 
 const styles = StyleSheet.create({
   container: {
+    width: Dimensions.get("window").width,
     padding: 20,
     borderBottomWidth: 0.3,
     borderColor: "black",
