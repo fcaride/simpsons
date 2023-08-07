@@ -14,7 +14,7 @@ export function VideoPlayer({ route, navigation }) {
     navigation.setOptions({
       title: `${episodeList[indexPlaying].season}, Capitulo ${episodeList[indexPlaying].episodeName}`,
     });
-  }, []);
+  }, [indexPlaying]);
 
   function setOrientation() {
     if (Dimensions.get("window").height > Dimensions.get("window").width) {
