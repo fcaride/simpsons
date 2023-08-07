@@ -1,7 +1,7 @@
 import { Video } from "expo-av";
 import * as ScreenOrientation from "expo-screen-orientation";
 import { useEffect, useRef, useState } from "react";
-import { Dimensions, ImageBackground, StyleSheet } from "react-native";
+import { Button, Dimensions, ImageBackground, StyleSheet } from "react-native";
 
 export function VideoPlayer({ route, navigation }) {
   const video = useRef(null);
