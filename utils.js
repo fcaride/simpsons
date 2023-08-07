@@ -61,21 +61,8 @@ const shuffleArray = (array) => {
 export const playRandom = (navigation) => () => {
   const sectionsEpisodes = getSectionsEpisodes();
   const flattenList = sectionsEpisodes.map((section) => section.data).flat();
-  const items = flattenList.map((episode) => {
-    const { url, episodeName, season } = episode;
-    return {
-      mediaInfo: {
-        contentUrl: url,
-        metadata: {
-          title: episodeName,
-          subtitle: season,
-        },
-      },
-      preloadTime: 30,
-    };
-  });
-  shuffleArray(items);
 
-  const urls = items.map((item) => item.mediaInfo.contentUrl);
-  navigation.navigate("VideoPlayer", { urls });
+  shuffleArray(flattenList);
+
+  navigation.navigate("VideoPlayer", { episodeList: flattenList });
 };

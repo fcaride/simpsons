@@ -1,15 +1,21 @@
 import { Video } from "expo-av";
 import * as ScreenOrientation from "expo-screen-orientation";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Dimensions, ImageBackground, StyleSheet } from "react-native";
 
-export function VideoPlayer({ route }) {
+export function VideoPlayer({ route, navigation }) {
   const video = useRef(null);
   const [status, setStatus] = useState({});
   const [isPreloading, setIsPreloading] = useState();
   const [isError, setIsError] = useState(false);
   const [indexPlaying, setIndexPlaying] = useState(0);
-  const { urls } = route.params;
+  const { episodeList } = route.params;
+  useEffect(() => {
+    navigation.setOptions({
+      title: `${episodeList[indexPlaying].season}, Capitulo ${episodeList[indexPlaying].episodeName}`,
+    });
+  }, []);
+
   function setOrientation() {
     if (Dimensions.get("window").height > Dimensions.get("window").width) {
       //Device is in portrait mode, rotate to landscape mode.
@@ -22,12 +28,12 @@ export function VideoPlayer({ route }) {
 
   const statusChanged = async (status) => {
     setStatus(status);
-    if (urls.length <= 1) {
+    if (episodeList.length <= 1) {
       return;
     }
     if (status.didJustFinish) {
       await video.current.loadAsync({
-        uri: urls[indexPlaying + 1],
+        uri: episodeList[indexPlaying + 1].url,
       });
       video.current.playAsync();
       setIndexPlaying((prev) => prev + 1);
@@ -50,7 +56,7 @@ export function VideoPlayer({ route }) {
         }}
         videoStyle={{ position: "relative" }}
         source={{
-          uri: urls[indexPlaying],
+          uri: episodeList[indexPlaying].url,
         }}
         onFullscreenUpdate={setOrientation}
         useNativeControls

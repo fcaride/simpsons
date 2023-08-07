@@ -67,7 +67,6 @@ function App() {
           name="VideoPlayer"
           component={VideoPlayer}
           options={{
-            headerTitle: "",
             headerStyle: {
               backgroundColor: "#FED811",
             },

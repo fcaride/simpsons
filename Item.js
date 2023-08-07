@@ -5,7 +5,8 @@ export const Item = ({ item }) => {
   const { episodeName, url, season } = item;
   const navigation = useNavigation();
 
-  const onPressItem = () => navigation.navigate("VideoPlayer", { urls: [url] });
+  const onPressItem = () =>
+    navigation.navigate("VideoPlayer", { episodeList: [item] });
 
   return (
     <TouchableOpacity style={styles.container} onPress={onPressItem}>
