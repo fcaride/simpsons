@@ -5,13 +5,20 @@ import {
   CastState,
 } from "react-native-google-cast";
 import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Ionicons } from "@expo/vector-icons";
 import { theme } from "./theme";
+import { Episode, RootStackParamList } from "./types";
 
-export const Item = ({ item }) => {
+interface ItemProps {
+  item: Episode;
+}
+
+export const Item = ({ item }: ItemProps): React.JSX.Element => {
   const { episodeName, url, season } = item;
   const castState = useCastState();
-  const navigation = useNavigation();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const client = useRemoteMediaClient();
 
@@ -23,7 +30,7 @@ export const Item = ({ item }) => {
           metadata: {
             title: episodeName,
             subtitle: season,
-          },
+          } as any,
         },
       });
     } else {
@@ -32,7 +39,11 @@ export const Item = ({ item }) => {
   };
 
   return (
-    <TouchableOpacity style={styles.card} onPress={onPressItem} activeOpacity={0.7}>
+    <TouchableOpacity
+      style={styles.card}
+      onPress={onPressItem}
+      activeOpacity={0.7}
+    >
       <View style={styles.iconContainer}>
         <Ionicons name="play-circle" size={32} color={theme.colors.secondary} />
       </View>

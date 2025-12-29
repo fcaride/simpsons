@@ -1,24 +1,38 @@
 import { useVideoPlayer, VideoView } from "expo-video";
 import * as ScreenOrientation from "expo-screen-orientation";
 import { useRef, useState, useEffect } from "react";
-import { ActivityIndicator, Dimensions, StyleSheet, View, Button, Text, TouchableOpacity, SafeAreaView } from "react-native";
+import {
+  ActivityIndicator,
+  Dimensions,
+  StyleSheet,
+  View,
+  Button,
+  Text,
+  TouchableOpacity,
+  SafeAreaView,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { theme } from "./theme";
+import { RootStackParamList } from "./types";
 
-export function VideoPlayer({ route }) {
+type VideoPlayerProps = NativeStackScreenProps<
+  RootStackParamList,
+  "VideoPlayer"
+>;
+
+export function VideoPlayer({ route }: VideoPlayerProps): React.JSX.Element {
   const { url, episodeName, season } = route.params;
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const navigation = useNavigation();
 
-
-
   const player = useVideoPlayer(url, (player) => {
     player.play();
   });
 
-  const videoViewRef = useRef(null);
+  const videoViewRef = useRef<VideoView>(null);
 
   useEffect(() => {
     const setupOrientation = async () => {
@@ -29,7 +43,9 @@ export function VideoPlayer({ route }) {
       }
     };
 
-    const handleOrientationChange = (event) => {
+    const handleOrientationChange = (
+      event: ScreenOrientation.OrientationChangeEvent
+    ): void => {
       const { orientationInfo } = event;
       const { orientation } = orientationInfo;
       if (!videoViewRef.current) {
@@ -39,28 +55,30 @@ export function VideoPlayer({ route }) {
         orientation === ScreenOrientation.Orientation.LANDSCAPE_LEFT ||
         orientation === ScreenOrientation.Orientation.LANDSCAPE_RIGHT
       ) {
-          videoViewRef.current.enterFullscreen();
+        videoViewRef.current.enterFullscreen();
       } else if (
         orientation === ScreenOrientation.Orientation.PORTRAIT_UP ||
         orientation === ScreenOrientation.Orientation.PORTRAIT_DOWN
       ) {
-          videoViewRef.current.exitFullscreen();
+        videoViewRef.current.exitFullscreen();
       }
     };
 
     setupOrientation();
-    const subscription = ScreenOrientation.addOrientationChangeListener(handleOrientationChange);
+    const subscription = ScreenOrientation.addOrientationChangeListener(
+      handleOrientationChange
+    );
 
     return () => {
       ScreenOrientation.removeOrientationChangeListener(subscription);
-      ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP).catch((err) =>
-        console.warn("Failed to lock orientation:", err)
-      );
+      ScreenOrientation.lockAsync(
+        ScreenOrientation.OrientationLock.PORTRAIT_UP
+      ).catch((err) => console.warn("Failed to lock orientation:", err));
     };
   }, []);
 
   useEffect(() => {
-    const subscription = player.addListener('playbackStatusUpdate', (status) => {
+    const subscription = player.addListener("statusChange", (status: any) => {
       // Hide spinner when video is loaded and ready to play
       if (status.isLoaded) {
         setIsLoading(false);
@@ -72,15 +90,19 @@ export function VideoPlayer({ route }) {
     };
   }, [player]);
 
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.backButton}
+        >
           <Ionicons name="arrow-back" size={28} color="white" />
         </TouchableOpacity>
         <View style={styles.titleContainer}>
-          <Text style={styles.title} numberOfLines={1}>{episodeName}</Text>
+          <Text style={styles.title} numberOfLines={1}>
+            {episodeName}
+          </Text>
           <Text style={styles.subtitle}>{season}</Text>
         </View>
       </View>
@@ -93,13 +115,12 @@ export function VideoPlayer({ route }) {
           allowsFullscreen
           allowsPictureInPicture
           contentFit="contain"
-
         />
         {isLoading && (
-          <ActivityIndicator 
-            size="large" 
-            color={theme.colors.primary} 
-            style={styles.loader} 
+          <ActivityIndicator
+            size="large"
+            color={theme.colors.primary}
+            style={styles.loader}
           />
         )}
       </View>
@@ -118,7 +139,6 @@ export function VideoPlayer({ route }) {
           />
         </View>
       )}
-
     </SafeAreaView>
   );
 }
@@ -166,7 +186,7 @@ const styles = StyleSheet.create({
     height: 300, // Or aspect ratio
   },
   loader: {
-    position: 'absolute',
+    position: "absolute",
     zIndex: 5,
   },
   errorContainer: {

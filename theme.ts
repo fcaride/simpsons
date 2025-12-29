@@ -1,4 +1,6 @@
-export const theme = {
+import { Theme } from "./types";
+
+export const theme: Theme = {
   colors: {
     primary: "#FFD90F", // Simpsons Yellow
     secondary: "#1D70B8", // Marge's Hair Blue / Pants Blue
@@ -17,12 +19,12 @@ export const theme = {
   typography: {
     header: {
       fontSize: 22,
-      fontWeight: "bold",
+      fontWeight: "bold" as const,
       color: "#333333",
     },
     title: {
       fontSize: 18,
-      fontWeight: "600",
+      fontWeight: "600" as const,
       color: "#333333",
     },
     subtitle: {

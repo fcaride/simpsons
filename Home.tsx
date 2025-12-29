@@ -1,19 +1,25 @@
 import React from "react";
-import { SafeAreaView, SectionList, StyleSheet, Text, View } from "react-native";
+import {
+  SafeAreaView,
+  SectionList,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { Item } from "./Item";
 import { MediaControls } from "./MediaControls";
 import { getSectionsEpisodes } from "./utils";
 import { theme } from "./theme";
 import { ShakeButton } from "./ShakeButton";
 
-export function Home() {
+export function Home(): React.JSX.Element {
   const sectionsEpisodes = getSectionsEpisodes();
 
   return (
     <SafeAreaView style={styles.container}>
       <SectionList
         sections={sectionsEpisodes}
-        keyExtractor={(item, index) => item + index}
+        keyExtractor={(item, index) => `${item.episodeName}-${index}`}
         renderItem={({ item }) => <Item item={item} />}
         renderSectionHeader={({ section: { season } }) => (
           <View style={styles.headerContainer}>
@@ -24,8 +30,7 @@ export function Home() {
         stickySectionHeadersEnabled={true}
       />
       <MediaControls />
-      <ShakeButton onPress={() => console.log("Shake button pressed")} />
-
+      <ShakeButton />
     </SafeAreaView>
   );
 }

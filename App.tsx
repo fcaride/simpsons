@@ -15,17 +15,18 @@ import { Home } from "./Home";
 import { getSectionsEpisodes } from "./utils";
 import { VideoPlayer } from "./VideoPlayer";
 import { theme } from "./theme";
+import { RootStackParamList } from "./types";
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
-const shuffleArray = (array) => {
+const shuffleArray = <T,>(array: T[]): void => {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [array[i], array[j]] = [array[j], array[i]];
   }
 };
 
-function App() {
+function App(): React.JSX.Element {
   const client = useRemoteMediaClient();
   const castState = useCastState();
 
@@ -71,7 +72,7 @@ function App() {
           metadata: {
             title: episodeName,
             subtitle: season,
-          },
+          } as any,
         },
         preloadTime: 30,
       };
@@ -109,13 +110,20 @@ function App() {
             ),
             headerLeft: () =>
               castState === CastState.CONNECTED && (
-                <TouchableOpacity onPress={randomCast} style={styles.randomButton}>
+                <TouchableOpacity
+                  onPress={randomCast}
+                  style={styles.randomButton}
+                >
                   <Text style={styles.randomButtonText}>Random Play</Text>
                 </TouchableOpacity>
               ),
           }}
         />
-        <Stack.Screen name="VideoPlayer" component={VideoPlayer} options={{ headerShown: false }} />
+        <Stack.Screen
+          name="VideoPlayer"
+          component={VideoPlayer}
+          options={{ headerShown: false }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

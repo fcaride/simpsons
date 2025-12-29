@@ -3,43 +3,39 @@ import { Animated, Easing, StyleSheet, TouchableOpacity } from "react-native";
 import { useRemoteMediaClient } from "react-native-google-cast";
 import { getSectionsEpisodes } from "./utils";
 
-
-export const ShakeButton = () => {
-
+export const ShakeButton = (): React.JSX.Element => {
   const animation = useRef(new Animated.Value(0)).current;
 
-  
-  
-    const client = useRemoteMediaClient();
-  
-    const sectionsEpisodes = getSectionsEpisodes();
-  
-    const randomCast = () => {
-      const flattenList = sectionsEpisodes.map((section) => section.data).flat();
-      const items = flattenList.map((episode) => {
-        const { url, episodeName, season } = episode;
-        return {
-          mediaInfo: {
-            contentUrl: url,
-            metadata: {
-              title: episodeName,
-              subtitle: season,
-            },
-          },
-          preloadTime: 30,
-        };
-      });
-      for (let i = items.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [items[i], items[j]] = [items[j], items[i]];
-      }
+  const client = useRemoteMediaClient();
 
-      client?.loadMedia({
-        queueData: {
-          items,
+  const sectionsEpisodes = getSectionsEpisodes();
+
+  const randomCast = () => {
+    const flattenList = sectionsEpisodes.map((section) => section.data).flat();
+    const items = flattenList.map((episode) => {
+      const { url, episodeName, season } = episode;
+      return {
+        mediaInfo: {
+          contentUrl: url,
+          metadata: {
+            title: episodeName,
+            subtitle: season,
+          } as any,
         },
-      });
-    };
+        preloadTime: 30,
+      };
+    });
+    for (let i = items.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [items[i], items[j]] = [items[j], items[i]];
+    }
+
+    client?.loadMedia({
+      queueData: {
+        items,
+      },
+    });
+  };
   const startAnimation = () => {
     Animated.loop(
       Animated.sequence([

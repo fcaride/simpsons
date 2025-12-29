@@ -1,4 +1,10 @@
-import { View, StyleSheet, TouchableOpacity, Text, SafeAreaView } from "react-native";
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+  SafeAreaView,
+} from "react-native";
 import {
   useRemoteMediaClient,
   useMediaStatus,
@@ -8,18 +14,24 @@ import {
 } from "react-native-google-cast";
 import { theme } from "./theme";
 
-export const MediaControls = () => {
+export const MediaControls = (): React.JSX.Element | null => {
   const client = useRemoteMediaClient();
   const mediaStatus = useMediaStatus();
   const castState = useCastState();
 
   const statusButton =
     mediaStatus?.playerState === MediaPlayerState.PLAYING ? (
-      <TouchableOpacity style={[styles.button, styles.playPauseButton]} onPress={() => client?.pause()}>
+      <TouchableOpacity
+        style={[styles.button, styles.playPauseButton]}
+        onPress={() => client?.pause()}
+      >
         <Text style={styles.textButton}>Pause</Text>
       </TouchableOpacity>
     ) : (
-      <TouchableOpacity style={[styles.button, styles.playPauseButton]} onPress={() => client?.play()}>
+      <TouchableOpacity
+        style={[styles.button, styles.playPauseButton]}
+        onPress={() => client?.play()}
+      >
         <Text style={styles.textButton}>Play</Text>
       </TouchableOpacity>
     );
@@ -35,9 +47,9 @@ export const MediaControls = () => {
         >
           <Text style={styles.textButton}>Prev</Text>
         </TouchableOpacity>
-        
+
         {statusButton}
-        
+
         <TouchableOpacity
           style={styles.button}
           onPress={() => client?.queueNext()}
@@ -51,12 +63,12 @@ export const MediaControls = () => {
 
 const styles = StyleSheet.create({
   wrapper: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
-    width: '100%',
+    width: "100%",
     backgroundColor: theme.colors.background,
     borderTopWidth: 1,
-    borderTopColor: '#ddd',
+    borderTopColor: "#ddd",
     paddingBottom: 20, // SafeArea
     paddingTop: 10,
     ...theme.shadows.default,
