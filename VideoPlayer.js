@@ -15,6 +15,52 @@ export function VideoPlayer({ route }) {
     player.play();
   });
 
+  const videoViewRef = useRef(null);
+
+  useEffect(() => {
+    const setupOrientation = async () => {
+      try {
+        await ScreenOrientation.unlockAsync();
+      } catch (error) {
+        console.warn("Failed to unlock orientation:", error);
+      }
+    };
+
+    const handleOrientationChange = (event) => {
+      const { orientationInfo } = event;
+      const { orientation } = orientationInfo;
+      console.log("Orientation changed:", orientation);
+      
+      if (
+        orientation === ScreenOrientation.Orientation.LANDSCAPE_LEFT ||
+        orientation === ScreenOrientation.Orientation.LANDSCAPE_RIGHT
+      ) {
+        if (videoViewRef.current) {
+          videoViewRef.current.enterFullscreen();
+        } else {
+          console.warn("VideoView ref is null on landscape");
+        }
+      } else if (
+        orientation === ScreenOrientation.Orientation.PORTRAIT_UP ||
+        orientation === ScreenOrientation.Orientation.PORTRAIT_DOWN
+      ) {
+        if (videoViewRef.current) {
+          videoViewRef.current.exitFullscreen();
+        }
+      }
+    };
+
+    setupOrientation();
+    const subscription = ScreenOrientation.addOrientationChangeListener(handleOrientationChange);
+
+    return () => {
+      ScreenOrientation.removeOrientationChangeListener(subscription);
+      ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP).catch((err) =>
+        console.warn("Failed to lock orientation:", err)
+      );
+    };
+  }, []);
+
 
   return (
     <SafeAreaView style={styles.container}>
@@ -30,6 +76,7 @@ export function VideoPlayer({ route }) {
 
       <View style={styles.videoContainer}>
         <VideoView
+          ref={videoViewRef}
           player={player}
           style={styles.video}
           allowsFullscreen
