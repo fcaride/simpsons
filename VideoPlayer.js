@@ -57,6 +57,61 @@ export function VideoPlayer({ route }) {
     };
   }, []);
 
+  // Listen to fullscreen changes and orientation to handle exit
+  useEffect(() => {
+    let currentOrientation = ScreenOrientation.Orientation.PORTRAIT_UP;
+    
+    const orientationSubscription = ScreenOrientation.addOrientationChangeListener((event) => {
+      currentOrientation = event.orientationInfo.orientation;
+      console.log("Orientation changed to:", currentOrientation);
+    });
+
+    // Listen to fullscreen updates from the player
+    const fullscreenSubscription = player.addListener('fullscreenUpdate', (event) => {
+      console.log("Fullscreen update:", event);
+      
+      // If we're in fullscreen and orientation is portrait, exit fullscreen
+      if (event.isFullscreen) {
+        const checkOrientation = async () => {
+          const orientation = await ScreenOrientation.getOrientationAsync();
+          console.log("Current orientation while in fullscreen:", orientation);
+          
+          if (
+            orientation === ScreenOrientation.Orientation.PORTRAIT_UP ||
+            orientation === ScreenOrientation.Orientation.PORTRAIT_DOWN
+          ) {
+            console.log("Portrait detected in fullscreen, exiting...");
+            if (videoViewRef.current) {
+              videoViewRef.current.exitFullscreen();
+            }
+          }
+        };
+        checkOrientation();
+      }
+    });
+
+    return () => {
+      orientationSubscription.remove();
+      fullscreenSubscription.remove();
+    };
+  }, [player]);
+
+  // Listen to playback status for loading state
+  useEffect(() => {
+    const subscription = player.addListener('playbackStatusUpdate', (status) => {
+      if (status.isLoaded && !status.isBuffering) {
+        setIsLoading(false);
+      }
+      if (status.isBuffering) {
+        setIsLoading(true);
+      }
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, [player]);
+
 
   return (
     <SafeAreaView style={styles.container}>
