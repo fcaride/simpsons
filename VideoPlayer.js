@@ -80,6 +80,13 @@ export function VideoPlayer({ route }) {
           contentFit="contain"
 
         />
+        {isLoading && (
+          <ActivityIndicator 
+            size="large" 
+            color={theme.colors.primary} 
+            style={styles.loader} 
+          />
+        )}
       </View>
 
       {isError && (
