@@ -57,54 +57,40 @@ export function VideoPlayer({ route }) {
     };
   }, []);
 
-  // Listen to fullscreen changes and orientation to handle exit
+  // Continuously check orientation and exit fullscreen if in portrait
   useEffect(() => {
-    let currentOrientation = ScreenOrientation.Orientation.PORTRAIT_UP;
-    
-    const orientationSubscription = ScreenOrientation.addOrientationChangeListener((event) => {
-      currentOrientation = event.orientationInfo.orientation;
-      console.log("Orientation changed to:", currentOrientation);
-    });
-
-    // Listen to fullscreen updates from the player
-    const fullscreenSubscription = player.addListener('fullscreenUpdate', (event) => {
-      console.log("Fullscreen update:", event);
+    const intervalId = setInterval(async () => {
+      if (!videoViewRef.current) return;
       
-      // If we're in fullscreen and orientation is portrait, exit fullscreen
-      if (event.isFullscreen) {
-        const checkOrientation = async () => {
-          const orientation = await ScreenOrientation.getOrientationAsync();
-          console.log("Current orientation while in fullscreen:", orientation);
-          
-          if (
-            orientation === ScreenOrientation.Orientation.PORTRAIT_UP ||
-            orientation === ScreenOrientation.Orientation.PORTRAIT_DOWN
-          ) {
-            console.log("Portrait detected in fullscreen, exiting...");
-            if (videoViewRef.current) {
-              videoViewRef.current.exitFullscreen();
-            }
-          }
-        };
-        checkOrientation();
+      try {
+        const orientation = await ScreenOrientation.getOrientationAsync();
+        
+        // Check if we're in portrait mode
+        const isPortrait = 
+          orientation === ScreenOrientation.Orientation.PORTRAIT_UP ||
+          orientation === ScreenOrientation.Orientation.PORTRAIT_DOWN;
+        
+        if (isPortrait && videoViewRef.current) {
+          // Try to exit fullscreen - this will only work if we're actually in fullscreen
+          videoViewRef.current.exitFullscreen();
+        }
+      } catch (error) {
+        // Silently ignore errors
       }
-    });
+    }, 500); // Check every 500ms
 
     return () => {
-      orientationSubscription.remove();
-      fullscreenSubscription.remove();
+      clearInterval(intervalId);
     };
-  }, [player]);
+  }, []);
 
   // Listen to playback status for loading state
   useEffect(() => {
     const subscription = player.addListener('playbackStatusUpdate', (status) => {
-      if (status.isLoaded && !status.isBuffering) {
+      if (status.isPlaying) {
         setIsLoading(false);
       }
-      if (status.isBuffering) {
-        setIsLoading(true);
-      }
+
     });
 
     return () => {
