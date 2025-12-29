@@ -101,7 +101,7 @@ function App() {
           name="Home"
           component={Home}
           options={{
-            title: "The Simpsonsss",
+            title: "The Simpsons",
             headerRight: () => (
               <CastButton
                 style={{ width: 24, height: 24, tintColor: theme.colors.black }}
