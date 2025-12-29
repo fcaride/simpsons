@@ -12,6 +12,8 @@ export function VideoPlayer({ route }) {
   const [isLoading, setIsLoading] = useState(true);
   const navigation = useNavigation();
 
+
+
   const player = useVideoPlayer(url, (player) => {
     player.play();
   });
