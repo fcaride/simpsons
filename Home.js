@@ -4,6 +4,7 @@ import { Item } from "./Item";
 import { MediaControls } from "./MediaControls";
 import { getSectionsEpisodes } from "./utils";
 import { theme } from "./theme";
+import { ShakeButton } from "./ShakeButton";
 
 export function Home() {
   const sectionsEpisodes = getSectionsEpisodes();
@@ -23,6 +24,8 @@ export function Home() {
         stickySectionHeadersEnabled={true}
       />
       <MediaControls />
+      <ShakeButton onPress={() => console.log("Shake button pressed")} />
+
     </SafeAreaView>
   );
 }

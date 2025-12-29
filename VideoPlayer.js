@@ -54,6 +54,7 @@ export function VideoPlayer({ route }) {
           />
         </View>
       )}
+
     </SafeAreaView>
   );
 }
@@ -113,5 +114,22 @@ const styles = StyleSheet.create({
   errorText: {
     color: "white",
     marginBottom: 10,
+  },
+  shakeButton: {
+    position: "absolute",
+    bottom: 40,
+    right: 20,
+    backgroundColor: theme.colors.primary,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    justifyContent: "center",
+    alignItems: "center",
+    elevation: 5,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    zIndex: 20,
   },
 });
