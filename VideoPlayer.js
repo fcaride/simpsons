@@ -1,54 +1,117 @@
 import { useVideoPlayer, VideoView } from "expo-video";
 import * as ScreenOrientation from "expo-screen-orientation";
-import { useRef, useState } from "react";
-import { ActivityIndicator, Dimensions, StyleSheet, View, Button } from "react-native";
+import { useRef, useState, useEffect } from "react";
+import { ActivityIndicator, Dimensions, StyleSheet, View, Button, Text, TouchableOpacity, SafeAreaView } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import { theme } from "./theme";
 
 export function VideoPlayer({ route }) {
-  const { url } = route.params;
+  const { url, episodeName, season } = route.params;
   const [isPreloading, setIsPreloading] = useState(true);
   const [isError, setIsError] = useState(false);
+  const navigation = useNavigation();
 
   const player = useVideoPlayer(url, (player) => {
     player.play();
   });
 
-  /*
-    expo-video automatically handles fullscreen transitions locally in the view.
-    If we need specific orientation locking logic, we can listen to player events,
-    but the default behavior usually works well for simple players.
-    We'll keep the ScreenOrientation import in case we need to re-add it,
-    but removing the manual listener for now as VideoView handles it differently.
-  */
-
   return (
-    <View style={styles.container}>
-      {isPreloading && <ActivityIndicator size="large" />}
-      <VideoView
-        player={player}
-        style={{ width: Dimensions.get("window").width, height: 200 }}
-        allowsFullscreen
-        allowsPictureInPicture
-        contentFit="cover"
-        onRide={() => setIsPreloading(false)}
-      />
-      {isError && (
-        <Button
-          title="Retry"
-          onPress={() => {
-            player.replace(url);
-            player.play();
-            setIsError(false);
-          }}
+    <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+          <Ionicons name="arrow-back" size={28} color="white" />
+        </TouchableOpacity>
+        <View style={styles.titleContainer}>
+          <Text style={styles.title} numberOfLines={1}>{episodeName}</Text>
+          <Text style={styles.subtitle}>{season}</Text>
+        </View>
+      </View>
+
+      <View style={styles.videoContainer}>
+        {isPreloading && <ActivityIndicator size="large" color={theme.colors.primary} style={styles.loader} />}
+        <VideoView
+          player={player}
+          style={styles.video}
+          allowsFullscreen
+          allowsPictureInPicture
+          contentFit="contain"
+          onRide={() => setIsPreloading(false)}
         />
+      </View>
+
+      {isError && (
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorText}>Error loading video</Text>
+          <Button
+            title="Retry"
+            color={theme.colors.secondary}
+            onPress={() => {
+              player.replace(url);
+              player.play();
+              setIsError(false);
+            }}
+          />
+        </View>
       )}
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "black",
+  },
+  header: {
+    position: "absolute",
+    top: 40, // Adjust for status bar if SafeAreaView doesn't handle absolute
+    left: 0,
+    right: 0,
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    zIndex: 10,
+    backgroundColor: "rgba(0,0,0,0.5)", // Semi-transparent background
+  },
+  backButton: {
+    padding: 5,
+    marginRight: 15,
+  },
+  titleContainer: {
+    flex: 1,
+  },
+  title: {
+    color: "white",
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  subtitle: {
+    color: "#ccc",
+    fontSize: 14,
+  },
+  videoContainer: {
+    flex: 1,
     justifyContent: "center",
-    backgroundColor: "#ecf0f1",
+    alignItems: "center",
+  },
+  video: {
+    width: "100%",
+    height: 300, // Or aspect ratio
+  },
+  loader: {
+    position: 'absolute',
+    zIndex: 5,
+  },
+  errorContainer: {
+    position: "absolute",
+    bottom: 50,
+    alignSelf: "center",
+    alignItems: "center",
+  },
+  errorText: {
+    color: "white",
+    marginBottom: 10,
   },
 });

@@ -1,10 +1,11 @@
-import { TouchableOpacity, Text, StyleSheet, Dimensions, View } from "react-native";
+import { TouchableOpacity, Text, StyleSheet, View } from "react-native";
 import {
   useRemoteMediaClient,
   useCastState,
   CastState,
 } from "react-native-google-cast";
 import { useNavigation } from "@react-navigation/native";
+import { Ionicons } from "@expo/vector-icons";
 import { theme } from "./theme";
 
 export const Item = ({ item }) => {
@@ -26,19 +27,20 @@ export const Item = ({ item }) => {
         },
       });
     } else {
-      navigation.navigate("VideoPlayer", { url });
+      navigation.navigate("VideoPlayer", { url, episodeName, season });
     }
   };
 
   return (
     <TouchableOpacity style={styles.card} onPress={onPressItem} activeOpacity={0.7}>
+      <View style={styles.iconContainer}>
+        <Ionicons name="play-circle" size={32} color={theme.colors.secondary} />
+      </View>
       <View style={styles.content}>
         <Text style={styles.title} numberOfLines={2}>
           {episodeName}
         </Text>
-        <Text style={styles.subtitle}>{season}</Text>
       </View>
-      <View style={styles.indicator} />
     </TouchableOpacity>
   );
 };
@@ -48,28 +50,21 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.cardBackground,
     marginVertical: theme.spacing.small / 2,
     marginHorizontal: theme.spacing.medium,
-    borderRadius: 8,
+    borderRadius: 12, // Increased roundness
     padding: theme.spacing.medium,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
     ...theme.shadows.default,
+  },
+  iconContainer: {
+    marginRight: theme.spacing.medium,
   },
   content: {
     flex: 1,
-    marginRight: 10,
   },
   title: {
     ...theme.typography.title,
-    marginBottom: 4,
-  },
-  subtitle: {
-    ...theme.typography.subtitle,
-  },
-  indicator: {
-    width: 6,
-    height: "80%",
-    borderRadius: 3,
-    backgroundColor: theme.colors.secondary,
+    fontSize: 16, // Slightly clearer
+    color: theme.colors.text,
   },
 });
