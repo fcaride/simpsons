@@ -44,6 +44,8 @@ project.xcworkspace
 
 # Android/IntelliJ
 #
+android/.kotlin/
+android/app/.cxx/
 android/build/
 android/app/build/
 android/.gradle/
