@@ -57,40 +57,12 @@ export function VideoPlayer({ route }) {
     };
   }, []);
 
-  // Continuously check orientation and exit fullscreen if in portrait
-  useEffect(() => {
-    const intervalId = setInterval(async () => {
-      if (!videoViewRef.current) return;
-      
-      try {
-        const orientation = await ScreenOrientation.getOrientationAsync();
-        
-        // Check if we're in portrait mode
-        const isPortrait = 
-          orientation === ScreenOrientation.Orientation.PORTRAIT_UP ||
-          orientation === ScreenOrientation.Orientation.PORTRAIT_DOWN;
-        
-        if (isPortrait && videoViewRef.current) {
-          // Try to exit fullscreen - this will only work if we're actually in fullscreen
-          videoViewRef.current.exitFullscreen();
-        }
-      } catch (error) {
-        // Silently ignore errors
-      }
-    }, 500); // Check every 500ms
-
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, []);
-
-  // Listen to playback status for loading state
   useEffect(() => {
     const subscription = player.addListener('playbackStatusUpdate', (status) => {
-      if (status.isPlaying) {
+      // Hide spinner when video is loaded and ready to play
+      if (status.isLoaded) {
         setIsLoading(false);
       }
-
     });
 
     return () => {
