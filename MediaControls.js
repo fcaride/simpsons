@@ -1,4 +1,4 @@
-import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
+import { View, StyleSheet, TouchableOpacity, Text, SafeAreaView } from "react-native";
 import {
   useRemoteMediaClient,
   useMediaStatus,
@@ -6,6 +6,7 @@ import {
   useCastState,
   CastState,
 } from "react-native-google-cast";
+import { theme } from "./theme";
 
 export const MediaControls = () => {
   const client = useRemoteMediaClient();
@@ -14,17 +15,19 @@ export const MediaControls = () => {
 
   const statusButton =
     mediaStatus?.playerState === MediaPlayerState.PLAYING ? (
-      <TouchableOpacity style={styles.button} onPress={() => client?.pause()}>
+      <TouchableOpacity style={[styles.button, styles.playPauseButton]} onPress={() => client?.pause()}>
         <Text style={styles.textButton}>Pause</Text>
       </TouchableOpacity>
     ) : (
-      <TouchableOpacity style={styles.button} onPress={() => client?.play()}>
+      <TouchableOpacity style={[styles.button, styles.playPauseButton]} onPress={() => client?.play()}>
         <Text style={styles.textButton}>Play</Text>
       </TouchableOpacity>
     );
 
+  if (castState !== CastState.CONNECTED) return null;
+
   return (
-    castState === CastState.CONNECTED && (
+    <View style={styles.wrapper}>
       <View style={styles.container}>
         <TouchableOpacity
           style={styles.button}
@@ -32,7 +35,9 @@ export const MediaControls = () => {
         >
           <Text style={styles.textButton}>Prev</Text>
         </TouchableOpacity>
+        
         {statusButton}
+        
         <TouchableOpacity
           style={styles.button}
           onPress={() => client?.queueNext()}
@@ -40,23 +45,43 @@ export const MediaControls = () => {
           <Text style={styles.textButton}>Next</Text>
         </TouchableOpacity>
       </View>
-    )
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  wrapper: {
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+    backgroundColor: theme.colors.background,
+    borderTopWidth: 1,
+    borderTopColor: '#ddd',
+    paddingBottom: 20, // SafeArea
+    paddingTop: 10,
+    ...theme.shadows.default,
+  },
   container: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
-    paddingBottom: 10,
-    backgroundColor: "black",
-    width: "100%",
+    justifyContent: "space-evenly",
+    paddingHorizontal: 20,
   },
   button: {
-    padding: 15,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    backgroundColor: theme.colors.secondary,
+    borderRadius: 25,
+  },
+  playPauseButton: {
+    backgroundColor: theme.colors.primary,
+    paddingHorizontal: 30,
+    transform: [{ scale: 1.1 }],
   },
   textButton: {
-    color: "white",
+    color: theme.colors.white,
+    fontWeight: "bold",
+    textTransform: "uppercase",
+    fontSize: 12,
   },
 });

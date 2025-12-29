@@ -1,8 +1,9 @@
 import React from "react";
-import { SafeAreaView, SectionList, StyleSheet, Text } from "react-native";
+import { SafeAreaView, SectionList, StyleSheet, Text, View } from "react-native";
 import { Item } from "./Item";
 import { MediaControls } from "./MediaControls";
 import { getSectionsEpisodes } from "./utils";
+import { theme } from "./theme";
 
 export function Home() {
   const sectionsEpisodes = getSectionsEpisodes();
@@ -14,8 +15,12 @@ export function Home() {
         keyExtractor={(item, index) => item + index}
         renderItem={({ item }) => <Item item={item} />}
         renderSectionHeader={({ section: { season } }) => (
-          <Text style={styles.header}>{season}</Text>
+          <View style={styles.headerContainer}>
+            <Text style={styles.header}>{season}</Text>
+          </View>
         )}
+        contentContainerStyle={styles.listContent}
+        stickySectionHeadersEnabled={true}
       />
       <MediaControls />
     </SafeAreaView>
@@ -25,14 +30,22 @@ export function Home() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: theme.colors.background,
+  },
+  listContent: {
+    paddingBottom: 100, // Space for media controls
+  },
+  headerContainer: {
+    backgroundColor: theme.colors.primary,
+    paddingVertical: theme.spacing.small,
+    paddingHorizontal: theme.spacing.medium,
+    marginVertical: theme.spacing.small,
+    marginHorizontal: theme.spacing.medium,
+    borderRadius: 8,
+    ...theme.shadows.default,
   },
   header: {
-    backgroundColor: "yellow",
-    padding: 5,
-    fontSize: 20,
-    flex: 1,
+    ...theme.typography.header,
+    color: theme.colors.text,
   },
 });

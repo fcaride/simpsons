@@ -3,7 +3,7 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
-import { Text, TouchableOpacity } from "react-native";
+import { Text, TouchableOpacity, StyleSheet } from "react-native";
 import {
   CastButton,
   CastState,
@@ -13,6 +13,7 @@ import {
 import { Home } from "./Home";
 import { getSectionsEpisodes } from "./utils";
 import { VideoPlayer } from "./VideoPlayer";
+import { theme } from "./theme";
 
 const Stack = createNativeStackNavigator();
 
@@ -54,28 +55,54 @@ function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: theme.colors.primary,
+          },
+          headerTintColor: theme.colors.text,
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
+        }}
+      >
         <Stack.Screen
           name="Home"
           component={Home}
           options={{
+            title: "The Simpsons",
             headerRight: () => (
               <CastButton
-                style={{ width: 24, height: 24, tintColor: "black" }}
+                style={{ width: 24, height: 24, tintColor: theme.colors.black }}
               />
             ),
             headerLeft: () =>
               castState === CastState.CONNECTED && (
-                <TouchableOpacity onPress={randomCast} style={{ padding: 10 }}>
-                  <Text>Random</Text>
+                <TouchableOpacity onPress={randomCast} style={styles.randomButton}>
+                  <Text style={styles.randomButtonText}>Random Play</Text>
                 </TouchableOpacity>
               ),
           }}
         />
-        <Stack.Screen name="VideoPlayer" component={VideoPlayer} />
+        <Stack.Screen name="VideoPlayer" component={VideoPlayer} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
+
+const styles = StyleSheet.create({
+  randomButton: {
+    marginRight: 10,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    backgroundColor: theme.colors.secondary,
+    borderRadius: 20,
+  },
+  randomButtonText: {
+    color: theme.colors.white,
+    fontWeight: "bold",
+    fontSize: 12,
+  },
+});
 
 export default App;

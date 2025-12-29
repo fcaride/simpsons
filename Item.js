@@ -1,10 +1,11 @@
-import { TouchableOpacity, Text, StyleSheet, Dimensions } from "react-native";
+import { TouchableOpacity, Text, StyleSheet, Dimensions, View } from "react-native";
 import {
   useRemoteMediaClient,
   useCastState,
   CastState,
 } from "react-native-google-cast";
 import { useNavigation } from "@react-navigation/native";
+import { theme } from "./theme";
 
 export const Item = ({ item }) => {
   const { episodeName, url, season } = item;
@@ -30,17 +31,45 @@ export const Item = ({ item }) => {
   };
 
   return (
-    <TouchableOpacity style={styles.container} onPress={onPressItem}>
-      <Text style={styles.text}>{episodeName}</Text>
+    <TouchableOpacity style={styles.card} onPress={onPressItem} activeOpacity={0.7}>
+      <View style={styles.content}>
+        <Text style={styles.title} numberOfLines={2}>
+          {episodeName}
+        </Text>
+        <Text style={styles.subtitle}>{season}</Text>
+      </View>
+      <View style={styles.indicator} />
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    width: Dimensions.get("window").width,
-    padding: 20,
-    borderBottomWidth: 1,
-    borderColor: "blue",
+  card: {
+    backgroundColor: theme.colors.cardBackground,
+    marginVertical: theme.spacing.small / 2,
+    marginHorizontal: theme.spacing.medium,
+    borderRadius: 8,
+    padding: theme.spacing.medium,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    ...theme.shadows.default,
+  },
+  content: {
+    flex: 1,
+    marginRight: 10,
+  },
+  title: {
+    ...theme.typography.title,
+    marginBottom: 4,
+  },
+  subtitle: {
+    ...theme.typography.subtitle,
+  },
+  indicator: {
+    width: 6,
+    height: "80%",
+    borderRadius: 3,
+    backgroundColor: theme.colors.secondary,
   },
 });
