@@ -9,6 +9,7 @@ import { theme } from "./theme";
 export function VideoPlayer({ route }) {
   const { url, episodeName, season } = route.params;
   const [isError, setIsError] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const navigation = useNavigation();
 
   const player = useVideoPlayer(url, (player) => {
@@ -29,24 +30,19 @@ export function VideoPlayer({ route }) {
     const handleOrientationChange = (event) => {
       const { orientationInfo } = event;
       const { orientation } = orientationInfo;
-      console.log("Orientation changed:", orientation);
-      
+      if (!videoViewRef.current) {
+        return;
+      }
       if (
         orientation === ScreenOrientation.Orientation.LANDSCAPE_LEFT ||
         orientation === ScreenOrientation.Orientation.LANDSCAPE_RIGHT
       ) {
-        if (videoViewRef.current) {
           videoViewRef.current.enterFullscreen();
-        } else {
-          console.warn("VideoView ref is null on landscape");
-        }
       } else if (
         orientation === ScreenOrientation.Orientation.PORTRAIT_UP ||
         orientation === ScreenOrientation.Orientation.PORTRAIT_DOWN
       ) {
-        if (videoViewRef.current) {
           videoViewRef.current.exitFullscreen();
-        }
       }
     };
 
