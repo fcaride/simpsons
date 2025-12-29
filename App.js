@@ -3,7 +3,8 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
-import { Text, TouchableOpacity, StyleSheet } from "react-native";
+import { Text, TouchableOpacity, StyleSheet, AppState } from "react-native";
+import * as Updates from "expo-updates";
 import {
   CastButton,
   CastState,
@@ -27,6 +28,36 @@ const shuffleArray = (array) => {
 function App() {
   const client = useRemoteMediaClient();
   const castState = useCastState();
+
+  const onFetchUpdateAsync = React.useCallback(async () => {
+    if (__DEV__) {
+      return;
+    }
+    try {
+      const update = await Updates.checkForUpdateAsync();
+
+      if (update.isAvailable) {
+        await Updates.fetchUpdateAsync();
+        await Updates.reloadAsync();
+      }
+    } catch (error) {
+      console.log(`Error fetching latest Expo update: ${error}`);
+    }
+  }, []);
+
+  React.useEffect(() => {
+    onFetchUpdateAsync();
+
+    const subscription = AppState.addEventListener("change", (nextAppState) => {
+      if (nextAppState === "active") {
+        onFetchUpdateAsync();
+      }
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, [onFetchUpdateAsync]);
 
   const sectionsEpisodes = getSectionsEpisodes();
 
