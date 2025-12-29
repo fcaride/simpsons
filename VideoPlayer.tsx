@@ -78,9 +78,9 @@ export function VideoPlayer({ route }: VideoPlayerProps): React.JSX.Element {
   }, []);
 
   useEffect(() => {
-    const subscription = player.addListener("statusChange", (status: any) => {
-      // Hide spinner when video is loaded and ready to play
-      if (status.isLoaded) {
+    const subscription = player.addListener("statusChange", (status) => {
+      // Hide spinner when video is ready to play
+      if (status.status === "readyToPlay") {
         setIsLoading(false);
       }
     });
