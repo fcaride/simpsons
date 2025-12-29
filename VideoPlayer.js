@@ -1,91 +1,117 @@
-import { Video } from "expo-av";
+import { useVideoPlayer, VideoView } from "expo-video";
 import * as ScreenOrientation from "expo-screen-orientation";
-import { useEffect, useRef, useState } from "react";
-import { Button, Dimensions, ImageBackground, StyleSheet } from "react-native";
+import { useRef, useState, useEffect } from "react";
+import { ActivityIndicator, Dimensions, StyleSheet, View, Button, Text, TouchableOpacity, SafeAreaView } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import { theme } from "./theme";
 
-export function VideoPlayer({ route, navigation }) {
-  const video = useRef(null);
-  const [status, setStatus] = useState({});
-  const [isPreloading, setIsPreloading] = useState();
+export function VideoPlayer({ route }) {
+  const { url, episodeName, season } = route.params;
+  const [isPreloading, setIsPreloading] = useState(true);
   const [isError, setIsError] = useState(false);
-  const [indexPlaying, setIndexPlaying] = useState(0);
-  const { episodeList } = route.params;
-  useEffect(() => {
-    navigation.setOptions({
-      title: `${episodeList[indexPlaying].season}, Capitulo ${episodeList[indexPlaying].episodeName}`,
-    });
-  }, [indexPlaying]);
+  const navigation = useNavigation();
 
-  function setOrientation() {
-    if (Dimensions.get("window").height > Dimensions.get("window").width) {
-      //Device is in portrait mode, rotate to landscape mode.
-      ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
-    } else {
-      //Device is in landscape mode, rotate to portrait mode.
-      ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
-    }
-  }
-
-  const statusChanged = async (status) => {
-    setStatus(status);
-    if (episodeList.length <= 1) {
-      return;
-    }
-    if (status.didJustFinish) {
-      await video.current.loadAsync({
-        uri: episodeList[indexPlaying + 1].url,
-      });
-      video.current.playAsync();
-      setIndexPlaying((prev) => prev + 1);
-    }
-  };
+  const player = useVideoPlayer(url, (player) => {
+    player.play();
+  });
 
   return (
-    <ImageBackground
-      source={require("./assets/nubecitas.jpeg")}
-      resizeMode="cover"
-      style={styles.container}
-    >
-      <Video
-        ref={video}
-        style={{
-          width: Dimensions.get("window").width,
-          height: "100%",
-          flex: 1,
-          justifyContent: "center",
-        }}
-        videoStyle={{ position: "relative" }}
-        source={{
-          uri: episodeList[indexPlaying].url,
-        }}
-        onFullscreenUpdate={setOrientation}
-        useNativeControls
-        resizeMode="contain"
-        shouldPlay
-        onPlaybackStatusUpdate={statusChanged}
-        onLoadStart={() => setIsPreloading(true)}
-        onReadyForDisplay={() => setIsPreloading(false)}
-        onError={() => {
-          setIsPreloading(false);
-          setIsError(true);
-        }}
-      />
-      {isError && (
-        <Button
-          title="Retry"
-          onPress={async () => {
-            video?.current.loadAsync({ uri: url });
-          }}
+    <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+          <Ionicons name="arrow-back" size={28} color="white" />
+        </TouchableOpacity>
+        <View style={styles.titleContainer}>
+          <Text style={styles.title} numberOfLines={1}>{episodeName}</Text>
+          <Text style={styles.subtitle}>{season}</Text>
+        </View>
+      </View>
+
+      <View style={styles.videoContainer}>
+        {isPreloading && <ActivityIndicator size="large" color={theme.colors.primary} style={styles.loader} />}
+        <VideoView
+          player={player}
+          style={styles.video}
+          allowsFullscreen
+          allowsPictureInPicture
+          contentFit="contain"
+          onRide={() => setIsPreloading(false)}
         />
+      </View>
+
+      {isError && (
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorText}>Error loading video</Text>
+          <Button
+            title="Retry"
+            color={theme.colors.secondary}
+            onPress={() => {
+              player.replace(url);
+              player.play();
+              setIsError(false);
+            }}
+          />
+        </View>
       )}
-    </ImageBackground>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "black",
+  },
+  header: {
+    position: "absolute",
+    top: 40, // Adjust for status bar if SafeAreaView doesn't handle absolute
+    left: 0,
+    right: 0,
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    zIndex: 10,
+    backgroundColor: "rgba(0,0,0,0.5)", // Semi-transparent background
+  },
+  backButton: {
+    padding: 5,
+    marginRight: 15,
+  },
+  titleContainer: {
+    flex: 1,
+  },
+  title: {
+    color: "white",
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  subtitle: {
+    color: "#ccc",
+    fontSize: 14,
+  },
+  videoContainer: {
+    flex: 1,
     justifyContent: "center",
-    backgroundColor: "#ecf0f1",
+    alignItems: "center",
+  },
+  video: {
+    width: "100%",
+    height: 300, // Or aspect ratio
+  },
+  loader: {
+    position: 'absolute',
+    zIndex: 5,
+  },
+  errorContainer: {
+    position: "absolute",
+    bottom: 50,
+    alignSelf: "center",
+    alignItems: "center",
+  },
+  errorText: {
+    color: "white",
+    marginBottom: 10,
   },
 });

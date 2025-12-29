@@ -2,82 +2,107 @@
 
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { useEffect } from "react";
-
+import * as React from "react";
+import { Text, TouchableOpacity, StyleSheet } from "react-native";
 import {
-  useFonts,
-  VarelaRound_400Regular,
-} from "@expo-google-fonts/varela-round";
-import * as Updates from "expo-updates";
-import { AppState } from "react-native";
+  CastButton,
+  CastState,
+  useCastState,
+  useRemoteMediaClient,
+} from "react-native-google-cast";
 import { Home } from "./Home";
+import { getSectionsEpisodes } from "./utils";
 import { VideoPlayer } from "./VideoPlayer";
+import { theme } from "./theme";
 
 const Stack = createNativeStackNavigator();
 
-async function onFetchUpdateAsync() {
-  try {
-    const update = await Updates.checkForUpdateAsync();
-
-    if (update.isAvailable) {
-      await Updates.fetchUpdateAsync();
-      await Updates.reloadAsync();
-    }
-  } catch (error) {}
-}
+const shuffleArray = (array) => {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+};
 
 function App() {
-  useEffect(() => {
-    const subscription = AppState.addEventListener("change", (nextAppState) => {
-      if (nextAppState === "active") {
-        onFetchUpdateAsync();
-      }
+  const client = useRemoteMediaClient();
+  const castState = useCastState();
+
+  const sectionsEpisodes = getSectionsEpisodes();
+
+  const randomCast = () => {
+    const flattenList = sectionsEpisodes.map((section) => section.data).flat();
+    const items = flattenList.map((episode) => {
+      const { url, episodeName, season } = episode;
+      return {
+        mediaInfo: {
+          contentUrl: url,
+          metadata: {
+            title: episodeName,
+            subtitle: season,
+          },
+        },
+        preloadTime: 30,
+      };
     });
-
-    return () => {
-      subscription.remove();
-    };
-  }, []);
-
-  let [fontsLoaded] = useFonts({
-    VarelaRound_400Regular,
-  });
-
-  if (!fontsLoaded) {
-    return null;
-  }
+    shuffleArray(items);
+    client?.loadMedia({
+      queueData: {
+        items,
+      },
+    });
+  };
 
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: theme.colors.primary,
+          },
+          headerTintColor: theme.colors.text,
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
+        }}
+      >
         <Stack.Screen
           name="Home"
           component={Home}
-          options={({ navigation }) => ({
-            headerTitle: "",
-            headerStyle: {
-              backgroundColor: "#FED811",
-            },
-            headerTitleStyle: {
-              color: "#07537f",
-            },
-          })}
-        />
-        <Stack.Screen
-          name="VideoPlayer"
-          component={VideoPlayer}
           options={{
-            headerStyle: {
-              backgroundColor: "#FED811",
-            },
-            headerTitleStyle: {
-              color: "#07537f",
-            },
+            title: "The Simpsons",
+            headerRight: () => (
+              <CastButton
+                style={{ width: 24, height: 24, tintColor: theme.colors.black }}
+              />
+            ),
+            headerLeft: () =>
+              castState === CastState.CONNECTED && (
+                <TouchableOpacity onPress={randomCast} style={styles.randomButton}>
+                  <Text style={styles.randomButtonText}>Random Play</Text>
+                </TouchableOpacity>
+              ),
           }}
         />
+        <Stack.Screen name="VideoPlayer" component={VideoPlayer} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
+
+const styles = StyleSheet.create({
+  randomButton: {
+    marginRight: 10,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    backgroundColor: theme.colors.secondary,
+    borderRadius: 20,
+  },
+  randomButtonText: {
+    color: theme.colors.white,
+    fontWeight: "bold",
+    fontSize: 12,
+  },
+});
 
 export default App;

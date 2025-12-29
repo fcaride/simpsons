@@ -1,32 +1,70 @@
+import { TouchableOpacity, Text, StyleSheet, View } from "react-native";
+import {
+  useRemoteMediaClient,
+  useCastState,
+  CastState,
+} from "react-native-google-cast";
 import { useNavigation } from "@react-navigation/native";
-import { Dimensions, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { theme } from "./theme";
 
 export const Item = ({ item }) => {
   const { episodeName, url, season } = item;
+  const castState = useCastState();
   const navigation = useNavigation();
 
-  const onPressItem = () =>
-    navigation.navigate("VideoPlayer", { episodeList: [item] });
+  const client = useRemoteMediaClient();
+
+  const onPressItem = () => {
+    if (castState === CastState.CONNECTED) {
+      client?.loadMedia({
+        mediaInfo: {
+          contentUrl: url,
+          metadata: {
+            title: episodeName,
+            subtitle: season,
+          },
+        },
+      });
+    } else {
+      navigation.navigate("VideoPlayer", { url, episodeName, season });
+    }
+  };
 
   return (
-    <TouchableOpacity style={styles.container} onPress={onPressItem}>
-      <Text style={styles.text}>{episodeName}</Text>
+    <TouchableOpacity style={styles.card} onPress={onPressItem} activeOpacity={0.7}>
+      <View style={styles.iconContainer}>
+        <Ionicons name="play-circle" size={32} color={theme.colors.secondary} />
+      </View>
+      <View style={styles.content}>
+        <Text style={styles.title} numberOfLines={2}>
+          {episodeName}
+        </Text>
+      </View>
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    width: Dimensions.get("window").width,
-    padding: 20,
-    borderBottomWidth: 0.3,
-    borderColor: "black",
-    backgroundColor: "rgba(255,255,255,0.5)",
+  card: {
+    backgroundColor: theme.colors.cardBackground,
+    marginVertical: theme.spacing.small / 2,
+    marginHorizontal: theme.spacing.medium,
+    borderRadius: 12, // Increased roundness
+    padding: theme.spacing.medium,
+    flexDirection: "row",
+    alignItems: "center",
+    ...theme.shadows.default,
   },
-  text: {
-    fontSize: 16,
-    color: "black",
-
-    fontFamily: "VarelaRound_400Regular",
+  iconContainer: {
+    marginRight: theme.spacing.medium,
+  },
+  content: {
+    flex: 1,
+  },
+  title: {
+    ...theme.typography.title,
+    fontSize: 16, // Slightly clearer
+    color: theme.colors.text,
   },
 });

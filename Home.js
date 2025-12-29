@@ -1,55 +1,28 @@
-import React, { useMemo, useState } from "react";
-import {
-  ImageBackground,
-  SafeAreaView,
-  SectionList,
-  StyleSheet,
-  Text,
-  TextInput,
-} from "react-native";
+import React from "react";
+import { SafeAreaView, SectionList, StyleSheet, Text, View } from "react-native";
 import { Item } from "./Item";
-import { ShakeButton } from "./ShakeButton";
-import { getSectionsEpisodes, playRandom } from "./utils";
+import { MediaControls } from "./MediaControls";
+import { getSectionsEpisodes } from "./utils";
+import { theme } from "./theme";
 
-export function Home({ navigation }) {
+export function Home() {
   const sectionsEpisodes = getSectionsEpisodes();
-  const [query, setQuery] = useState("");
-
-  const episodes = useMemo(() => {
-    const filteredSections = sectionsEpisodes.map((sectionEpisode) => ({
-      ...sectionEpisode,
-      data: sectionEpisode.data.filter(({ episodeName }) =>
-        episodeName.includes(query)
-      ),
-    }));
-
-    return filteredSections.filter(({ data }) => data.length > 0);
-  }, [query]);
 
   return (
     <SafeAreaView style={styles.container}>
-      <TextInput
-        style={styles.inputSearch}
-        value={query}
-        onChangeText={setQuery}
-        placeholder="Buscar episodio"
-      />
-      <ImageBackground
-        source={require("./assets/nubecitas.jpeg")}
-        resizeMode="cover"
-        style={{ flex: 1 }}
-      >
-        <SectionList
-          sections={query ? episodes : sectionsEpisodes}
-          keyExtractor={(item, index) => item + index}
-          renderItem={({ item }) => <Item item={item} />}
-          renderSectionHeader={({ section: { season } }) => (
+      <SectionList
+        sections={sectionsEpisodes}
+        keyExtractor={(item, index) => item + index}
+        renderItem={({ item }) => <Item item={item} />}
+        renderSectionHeader={({ section: { season } }) => (
+          <View style={styles.headerContainer}>
             <Text style={styles.header}>{season}</Text>
-          )}
-        />
-      </ImageBackground>
-
-      <ShakeButton onPress={playRandom(navigation)} />
+          </View>
+        )}
+        contentContainerStyle={styles.listContent}
+        stickySectionHeadersEnabled={true}
+      />
+      <MediaControls />
     </SafeAreaView>
   );
 }
@@ -57,36 +30,22 @@ export function Home({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: theme.colors.background,
+  },
+  listContent: {
+    paddingBottom: 100, // Space for media controls
+  },
+  headerContainer: {
+    backgroundColor: theme.colors.primary,
+    paddingVertical: theme.spacing.small,
+    paddingHorizontal: theme.spacing.medium,
+    marginVertical: theme.spacing.small,
+    marginHorizontal: theme.spacing.medium,
+    borderRadius: 8,
+    ...theme.shadows.default,
   },
   header: {
-    backgroundColor: "#07537f",
-    paddingLeft: 15,
-    paddingVertical: 10,
-    fontSize: 20,
-    color: "white",
-    fontFamily: "VarelaRound_400Regular",
-  },
-  inputSearch: {
-    paddingVertical: 10,
-    paddingLeft: 15,
-    fontSize: 16,
-    alignSelf: "flex-start",
-    fontFamily: "VarelaRound_400Regular",
-    backgroundColor: "white",
-    width: "100%",
-  },
-  floatingButton: {
-    position: "absolute",
-    bottom: 30,
-    right: 30,
-    width: 70,
-    height: 70,
-    borderRadius: 35,
-    backgroundColor: "#07537f",
-    alignItems: "center",
-    justifyContent: "center",
+    ...theme.typography.header,
+    color: theme.colors.text,
   },
 });
