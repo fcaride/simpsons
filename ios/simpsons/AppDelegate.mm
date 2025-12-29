@@ -1,4 +1,9 @@
 #import "AppDelegate.h"
+// @generated begin react-native-google-cast-import - expo prebuild (DO NOT MODIFY) sync-da0acf16745f87cea5bffba9c0cc3a4f5e4387ea
+#if __has_include(<GoogleCast/GoogleCast.h>)
+#import <GoogleCast/GoogleCast.h>
+#endif
+// @generated end react-native-google-cast-import
 
 #import <React/RCTBridge.h>
 #import <React/RCTBundleURLProvider.h>
@@ -31,6 +36,18 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+// @generated begin react-native-google-cast-didFinishLaunchingWithOptions - expo prebuild (DO NOT MODIFY) sync-4cd5df8fe0a2a5f3674692a0cdb918b6bbf2339a
+#if __has_include(<GoogleCast/GoogleCast.h>)
+  NSString *receiverAppID = kGCKDefaultMediaReceiverApplicationID;
+  GCKDiscoveryCriteria *criteria = [[GCKDiscoveryCriteria alloc] initWithApplicationID:receiverAppID];
+  GCKCastOptions* options = [[GCKCastOptions alloc] initWithDiscoveryCriteria:criteria];
+  options.disableDiscoveryAutostart = false;
+  options.startDiscoveryAfterFirstTapOnCastButton = true;
+  options.suspendSessionsWhenBackgrounded = true;
+  [GCKCastContext setSharedInstanceWithOptions:options];
+  [GCKCastContext sharedInstance].useDefaultExpandedMediaControls = true;
+#endif
+// @generated end react-native-google-cast-didFinishLaunchingWithOptions
   RCTAppSetupPrepareApp(application);
 
   RCTBridge *bridge = [self.reactDelegate createBridgeWithDelegate:self launchOptions:launchOptions];

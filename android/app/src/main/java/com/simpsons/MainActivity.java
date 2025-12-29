@@ -1,4 +1,6 @@
 package com.simpsons;
+import com.reactnative.googlecast.api.RNGCCastContext;
+import expo.modules.splashscreen.SplashScreenManager;
 import com.google.android.gms.cast.framework.CastContext;
 
 import android.os.Build;
@@ -16,10 +18,13 @@ public class MainActivity extends ReactActivity {
     // Set the theme to AppTheme BEFORE onCreate to support 
     // coloring the background, status bar, and navigation bar.
     // This is required for expo-splash-screen.
-    setTheme(R.style.AppTheme);
+    // setTheme(R.style.AppTheme);
+    // @generated begin expo-splashscreen - expo prebuild (DO NOT MODIFY) sync-9de1acb179e7badd745510fd00d9f3e42afcc9f5
+    SplashScreenManager.registerOnActivity(this);
+    // @generated end expo-splashscreen
     super.onCreate(null);
-// @generated begin react-native-google-cast-onCreate - expo prebuild (DO NOT MODIFY) sync-db583defdeb0226930ad5278e6c069db65777d42
-    CastContext.getSharedInstance(this);
+// @generated begin react-native-google-cast-onCreate - expo prebuild (DO NOT MODIFY) sync-489050f2bf9933a98bbd9d93137016ae14c22faa
+    RNGCCastContext.getSharedInstance(this)
 // @generated end react-native-google-cast-onCreate
   }
 
