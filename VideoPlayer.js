@@ -8,7 +8,6 @@ import { theme } from "./theme";
 
 export function VideoPlayer({ route }) {
   const { url, episodeName, season } = route.params;
-  const [isPreloading, setIsPreloading] = useState(true);
   const [isError, setIsError] = useState(false);
   const navigation = useNavigation();
 
@@ -16,20 +15,6 @@ export function VideoPlayer({ route }) {
     player.play();
   });
 
-  useEffect(() => {
-    if (player.status === 'readyToPlay') {
-      setIsPreloading(false);
-    }
-    const subscription = player.addListener('statusChange', (status) => {
-      if (status === 'readyToPlay') {
-        setIsPreloading(false);
-      }
-    });
-
-    return () => {
-      subscription.remove();
-    };
-  }, [player]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -44,7 +29,6 @@ export function VideoPlayer({ route }) {
       </View>
 
       <View style={styles.videoContainer}>
-        {isPreloading && <ActivityIndicator size="large" color={theme.colors.primary} style={styles.loader} />}
         <VideoView
           player={player}
           style={styles.video}
