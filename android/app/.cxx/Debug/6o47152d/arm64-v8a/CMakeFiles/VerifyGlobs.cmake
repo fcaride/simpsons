@@ -35,7 +35,6 @@ endif()
 # LIB_CODEGEN_SRCS at /Users/fernandocaride/Documents/AlPedo/simpsons/node_modules/react-native-safe-area-context/android/src/main/jni/CMakeLists.txt:13 (file)
 file(GLOB NEW_GLOB LIST_DIRECTORIES true "/Users/fernandocaride/Documents/AlPedo/simpsons/node_modules/react-native-safe-area-context/android/src/main/jni/../../../build/generated/source/codegen/jni/*.cpp")
 set(OLD_GLOB
-  "/Users/fernandocaride/Documents/AlPedo/simpsons/node_modules/react-native-safe-area-context/android/src/main/jni/../../../build/generated/source/codegen/jni/safeareacontext-generated.cpp"
   )
 if(NOT "${NEW_GLOB}" STREQUAL "${OLD_GLOB}")
   message("-- GLOB mismatch!")
@@ -45,12 +44,6 @@ endif()
 # LIB_CODEGEN_SRCS at /Users/fernandocaride/Documents/AlPedo/simpsons/node_modules/react-native-safe-area-context/android/src/main/jni/CMakeLists.txt:13 (file)
 file(GLOB NEW_GLOB LIST_DIRECTORIES true "/Users/fernandocaride/Documents/AlPedo/simpsons/node_modules/react-native-safe-area-context/android/src/main/jni/../../../build/generated/source/codegen/jni/react/renderer/components/safeareacontext/*.cpp")
 set(OLD_GLOB
-  "/Users/fernandocaride/Documents/AlPedo/simpsons/node_modules/react-native-safe-area-context/android/src/main/jni/../../../build/generated/source/codegen/jni/react/renderer/components/safeareacontext/ComponentDescriptors.cpp"
-  "/Users/fernandocaride/Documents/AlPedo/simpsons/node_modules/react-native-safe-area-context/android/src/main/jni/../../../build/generated/source/codegen/jni/react/renderer/components/safeareacontext/EventEmitters.cpp"
-  "/Users/fernandocaride/Documents/AlPedo/simpsons/node_modules/react-native-safe-area-context/android/src/main/jni/../../../build/generated/source/codegen/jni/react/renderer/components/safeareacontext/Props.cpp"
-  "/Users/fernandocaride/Documents/AlPedo/simpsons/node_modules/react-native-safe-area-context/android/src/main/jni/../../../build/generated/source/codegen/jni/react/renderer/components/safeareacontext/ShadowNodes.cpp"
-  "/Users/fernandocaride/Documents/AlPedo/simpsons/node_modules/react-native-safe-area-context/android/src/main/jni/../../../build/generated/source/codegen/jni/react/renderer/components/safeareacontext/States.cpp"
-  "/Users/fernandocaride/Documents/AlPedo/simpsons/node_modules/react-native-safe-area-context/android/src/main/jni/../../../build/generated/source/codegen/jni/react/renderer/components/safeareacontext/safeareacontextJSI-generated.cpp"
   )
 if(NOT "${NEW_GLOB}" STREQUAL "${OLD_GLOB}")
   message("-- GLOB mismatch!")
@@ -99,12 +92,6 @@ endif()
 # LIB_CODEGEN_SRCS at /Users/fernandocaride/Documents/AlPedo/simpsons/node_modules/react-native-screens/android/src/main/jni/CMakeLists.txt:24 (file)
 file(GLOB NEW_GLOB LIST_DIRECTORIES true "/Users/fernandocaride/Documents/AlPedo/simpsons/node_modules/react-native-screens/android/src/main/jni/../../../build/generated/source/codegen/jni/react/renderer/components/rnscreens/*.cpp")
 set(OLD_GLOB
-  "/Users/fernandocaride/Documents/AlPedo/simpsons/node_modules/react-native-screens/android/src/main/jni/../../../build/generated/source/codegen/jni/react/renderer/components/rnscreens/ComponentDescriptors.cpp"
-  "/Users/fernandocaride/Documents/AlPedo/simpsons/node_modules/react-native-screens/android/src/main/jni/../../../build/generated/source/codegen/jni/react/renderer/components/rnscreens/EventEmitters.cpp"
-  "/Users/fernandocaride/Documents/AlPedo/simpsons/node_modules/react-native-screens/android/src/main/jni/../../../build/generated/source/codegen/jni/react/renderer/components/rnscreens/Props.cpp"
-  "/Users/fernandocaride/Documents/AlPedo/simpsons/node_modules/react-native-screens/android/src/main/jni/../../../build/generated/source/codegen/jni/react/renderer/components/rnscreens/ShadowNodes.cpp"
-  "/Users/fernandocaride/Documents/AlPedo/simpsons/node_modules/react-native-screens/android/src/main/jni/../../../build/generated/source/codegen/jni/react/renderer/components/rnscreens/States.cpp"
-  "/Users/fernandocaride/Documents/AlPedo/simpsons/node_modules/react-native-screens/android/src/main/jni/../../../build/generated/source/codegen/jni/react/renderer/components/rnscreens/rnscreensJSI-generated.cpp"
   )
 if(NOT "${NEW_GLOB}" STREQUAL "${OLD_GLOB}")
   message("-- GLOB mismatch!")

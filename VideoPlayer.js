@@ -16,6 +16,21 @@ export function VideoPlayer({ route }) {
     player.play();
   });
 
+  useEffect(() => {
+    if (player.status === 'readyToPlay') {
+      setIsPreloading(false);
+    }
+    const subscription = player.addListener('statusChange', (status) => {
+      if (status === 'readyToPlay') {
+        setIsPreloading(false);
+      }
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, [player]);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -36,7 +51,7 @@ export function VideoPlayer({ route }) {
           allowsFullscreen
           allowsPictureInPicture
           contentFit="contain"
-          onRide={() => setIsPreloading(false)}
+
         />
       </View>
 
