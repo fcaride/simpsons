@@ -1,0 +1,1 @@
+/Users/fernandocaride/Documents/AlPedo/simpsons/android/app/build/intermediates/cxx/Debug/6o47152d/obj/arm64-v8a
