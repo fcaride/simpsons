@@ -77,7 +77,32 @@ export const CastButton = (props: any) => {
   const [isAvailable, setIsAvailable] = useState(false);
 
   useEffect(() => {
-    // Check availability periodically or wait for load
+    // Ensure script is loaded
+    if (!document.getElementById("google-cast-script")) {
+      const script = document.createElement("script");
+      script.id = "google-cast-script";
+      script.src =
+        "https://www.gstatic.com/cv/js/sender/v1/cast_framework.js?loadCastFramework=1";
+      document.body.appendChild(script);
+
+      // Initialize callback
+      window.__onGCastApiAvailable = (isAvailable) => {
+        if (isAvailable) {
+          try {
+            const context = window.cast.framework.CastContext.getInstance();
+            context.setOptions({
+              receiverApplicationId:
+                window.chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID,
+              autoJoinPolicy: window.chrome.cast.AutoJoinPolicy.ORIGIN_SCOPED,
+            });
+          } catch (e) {
+            console.error("Error initializing Cast SDK:", e);
+          }
+        }
+      };
+    }
+
+    // Check availability periodically
     const check = setInterval(() => {
       if (window.cast && window.cast.framework) {
         setIsAvailable(true);
@@ -91,9 +116,6 @@ export const CastButton = (props: any) => {
 
   return (
     <View style={[styles.container, props.style]}>
-      {/* 
-        We use a custom element for the cast button. 
-      */}
       <google-cast-launcher
         style={
           {
