@@ -1,4 +1,5 @@
 // Web implementation - provides Google Cast Web SDK implementation
+// Based on Google's official CastVideos sample app
 
 declare global {
   interface Window {
@@ -16,7 +17,7 @@ declare module "react" {
   }
 }
 
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import { View, StyleSheet } from "react-native";
 
 // CastState enum matching react-native-google-cast
@@ -37,82 +38,89 @@ export enum MediaPlayerState {
   UNKNOWN = "unknown",
 }
 
-// Initialize Cast SDK
-const initializeCastApi = () => {
-  if (typeof window !== "undefined") {
-    window.__onGCastApiAvailable = (isAvailable) => {
-      if (isAvailable) {
-        // Initialize with default receiver or your custom receiver ID
-        // CC1AD845 is the Default Media Receiver
-        // We use a try-catch block because accessing window.cast might still be fragile
-        try {
-          const context = window.cast.framework.CastContext.getInstance();
-          context.setOptions({
-            receiverApplicationId:
-              window.chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID,
-            autoJoinPolicy: window.chrome.cast.AutoJoinPolicy.ORIGIN_SCOPED,
-          });
-        } catch (e) {
-          console.error("Error initializing Cast SDK:", e);
-        }
-      }
-    };
+// Track SDK initialization state globally
+let castContextInitialized = false;
+let remotePlayer: any = null;
+let remotePlayerController: any = null;
 
-    // Load the Cast SDK if not already loaded
-    if (!document.getElementById("google-cast-script")) {
-      const script = document.createElement("script");
-      script.id = "google-cast-script";
-      script.src =
-        "https://www.gstatic.com/cv/js/sender/v1/cast_framework.js?loadCastFramework=1";
-      document.body.appendChild(script);
-    }
+// Initialize Cast SDK - called when SDK becomes available
+const initializeCastPlayer = () => {
+  if (castContextInitialized) return;
+  if (!window.cast || !window.cast.framework) return;
+  if (!window.chrome || !window.chrome.cast) return;
+
+  try {
+    const options: any = {};
+    // Use default media receiver or set your own receiver application ID
+    options.receiverApplicationId =
+      window.chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID;
+    options.autoJoinPolicy = window.chrome.cast.AutoJoinPolicy.ORIGIN_SCOPED;
+
+    window.cast.framework.CastContext.getInstance().setOptions(options);
+
+    // Create RemotePlayer and RemotePlayerController
+    remotePlayer = new window.cast.framework.RemotePlayer();
+    remotePlayerController = new window.cast.framework.RemotePlayerController(
+      remotePlayer
+    );
+
+    castContextInitialized = true;
+    console.log("Cast SDK initialized successfully");
+  } catch (e) {
+    console.error("Error initializing Cast SDK:", e);
   }
 };
 
-// Call initialization immediately
-initializeCastApi();
+// Load Cast SDK script and set up callback
+const loadCastSDK = () => {
+  if (typeof window === "undefined") return;
 
-// Web CastButton component
+  // Set up the callback that Google Cast SDK will call when available
+  window.__onGCastApiAvailable = (isAvailable: boolean) => {
+    if (isAvailable) {
+      initializeCastPlayer();
+    }
+  };
+
+  // Load the Cast SDK script if not already loaded
+  if (!document.getElementById("cast-sdk-script")) {
+    const script = document.createElement("script");
+    script.id = "cast-sdk-script";
+    script.src =
+      "https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1";
+    script.async = true;
+    document.head.appendChild(script);
+  }
+};
+
+// Initialize SDK on module load
+loadCastSDK();
+
+// Web CastButton component - renders the native google-cast-launcher element
 export const CastButton = (props: any) => {
-  const [isAvailable, setIsAvailable] = useState(false);
+  const [isReady, setIsReady] = useState(castContextInitialized);
 
   useEffect(() => {
-    // Ensure script is loaded
-    if (!document.getElementById("google-cast-script")) {
-      const script = document.createElement("script");
-      script.id = "google-cast-script";
-      script.src =
-        "https://www.gstatic.com/cv/js/sender/v1/cast_framework.js?loadCastFramework=1";
-      document.body.appendChild(script);
-
-      // Initialize callback
-      window.__onGCastApiAvailable = (isAvailable) => {
-        if (isAvailable) {
-          try {
-            const context = window.cast.framework.CastContext.getInstance();
-            context.setOptions({
-              receiverApplicationId:
-                window.chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID,
-              autoJoinPolicy: window.chrome.cast.AutoJoinPolicy.ORIGIN_SCOPED,
-            });
-          } catch (e) {
-            console.error("Error initializing Cast SDK:", e);
-          }
-        }
-      };
-    }
-
-    // Check availability periodically
-    const check = setInterval(() => {
-      if (window.cast && window.cast.framework) {
-        setIsAvailable(true);
-        clearInterval(check);
+    // Poll for SDK availability
+    const checkSDK = setInterval(() => {
+      if (castContextInitialized) {
+        setIsReady(true);
+        clearInterval(checkSDK);
+      } else {
+        // Try to initialize if SDK is available but not yet initialized
+        initializeCastPlayer();
       }
     }, 500);
-    return () => clearInterval(check);
+
+    // Initial check
+    if (castContextInitialized) {
+      setIsReady(true);
+    }
+
+    return () => clearInterval(checkSDK);
   }, []);
 
-  if (!isAvailable) return null;
+  if (!isReady) return null;
 
   return (
     <View style={[styles.container, props.style]}>
@@ -126,188 +134,300 @@ export const CastButton = (props: any) => {
             "--disconnected-color": props.tintColor || "#FFFFFF",
           } as any
         }
-      ></google-cast-launcher>
+      />
     </View>
   );
 };
 
-// Hook to track Cast State
+// Hook to track Cast connection state
 export const useCastState = (): CastState => {
   const [castState, setCastState] = useState<CastState>(
     CastState.NO_DEVICES_AVAILABLE
   );
 
   useEffect(() => {
-    if (!window.cast || !window.cast.framework) return;
+    // Poll for SDK and listen for connection changes
+    let cleanup: (() => void) | null = null;
 
-    const context = window.cast.framework.CastContext.getInstance();
+    const setupListener = () => {
+      if (!castContextInitialized || !remotePlayerController) {
+        return false;
+      }
 
-    // Initial state
-    updateCastState(context.getCastState());
+      // Get initial state
+      const updateState = () => {
+        if (remotePlayer && remotePlayer.isConnected) {
+          setCastState(CastState.CONNECTED);
+        } else {
+          // Check if devices are available via CastContext
+          try {
+            const context = window.cast.framework.CastContext.getInstance();
+            const state = context.getCastState();
+            if (state === "NO_DEVICES_AVAILABLE") {
+              setCastState(CastState.NO_DEVICES_AVAILABLE);
+            } else if (state === "CONNECTING") {
+              setCastState(CastState.CONNECTING);
+            } else {
+              setCastState(CastState.NOT_CONNECTED);
+            }
+          } catch {
+            setCastState(CastState.NOT_CONNECTED);
+          }
+        }
+      };
 
-    const eventHandler = (event: any) => {
-      updateCastState(event.castState);
+      updateState();
+
+      // Listen for connection changes on RemotePlayerController
+      const connectionHandler = () => {
+        updateState();
+      };
+
+      remotePlayerController.addEventListener(
+        window.cast.framework.RemotePlayerEventType.IS_CONNECTED_CHANGED,
+        connectionHandler
+      );
+
+      // Also listen to CastContext state changes
+      const context = window.cast.framework.CastContext.getInstance();
+      const castStateHandler = (event: any) => {
+        updateState();
+      };
+
+      context.addEventListener(
+        window.cast.framework.CastContextEventType.CAST_STATE_CHANGED,
+        castStateHandler
+      );
+
+      cleanup = () => {
+        remotePlayerController.removeEventListener(
+          window.cast.framework.RemotePlayerEventType.IS_CONNECTED_CHANGED,
+          connectionHandler
+        );
+        context.removeEventListener(
+          window.cast.framework.CastContextEventType.CAST_STATE_CHANGED,
+          castStateHandler
+        );
+      };
+
+      return true;
     };
 
-    context.addEventListener(
-      window.cast.framework.CastContextEventType.CAST_STATE_CHANGED,
-      eventHandler
-    );
+    // Try immediately
+    if (setupListener()) {
+      return () => cleanup?.();
+    }
+
+    // Poll until SDK is ready
+    const interval = setInterval(() => {
+      initializeCastPlayer();
+      if (setupListener()) {
+        clearInterval(interval);
+      }
+    }, 500);
 
     return () => {
-      context.removeEventListener(
-        window.cast.framework.CastContextEventType.CAST_STATE_CHANGED,
-        eventHandler
-      );
+      clearInterval(interval);
+      cleanup?.();
     };
   }, []);
-
-  const updateCastState = (webCastState: string) => {
-    switch (webCastState) {
-      case "NO_DEVICES_AVAILABLE":
-        setCastState(CastState.NO_DEVICES_AVAILABLE);
-        break;
-      case "NOT_CONNECTED":
-        setCastState(CastState.NOT_CONNECTED);
-        break;
-      case "CONNECTING":
-        setCastState(CastState.CONNECTING);
-        break;
-      case "CONNECTED":
-        setCastState(CastState.CONNECTED);
-        break;
-      default:
-        setCastState(CastState.NO_DEVICES_AVAILABLE);
-    }
-  };
 
   return castState;
 };
 
-// Hook to control media
+// Hook to control remote media - returns client object matching react-native-google-cast API
 export const useRemoteMediaClient = () => {
-  const [client, setClient] = useState<any>(null);
+  const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    if (!window.cast || !window.cast.framework) return;
+    let cleanup: (() => void) | null = null;
 
-    const context = window.cast.framework.CastContext.getInstance();
-
-    // Initial fetch
-    const session = context.getCurrentSession();
-    if (session) setClient(session.getMediaSession());
-
-    const eventHandler = () => {
-      const session = context.getCurrentSession();
-      if (session) {
-        setClient(session.getMediaSession() || {}); // return object to allow methods even if media session is null initially? No, better return null.
-        // Actually, we need a stable object that proxies calls to current session
-      } else {
-        setClient(null);
+    const setupListener = () => {
+      if (!castContextInitialized || !remotePlayerController) {
+        return false;
       }
+
+      // Get initial connection state
+      setIsConnected(remotePlayer?.isConnected || false);
+
+      // Listen for connection changes
+      const connectionHandler = () => {
+        setIsConnected(remotePlayer?.isConnected || false);
+      };
+
+      remotePlayerController.addEventListener(
+        window.cast.framework.RemotePlayerEventType.IS_CONNECTED_CHANGED,
+        connectionHandler
+      );
+
+      cleanup = () => {
+        remotePlayerController.removeEventListener(
+          window.cast.framework.RemotePlayerEventType.IS_CONNECTED_CHANGED,
+          connectionHandler
+        );
+      };
+
+      return true;
     };
 
-    context.addEventListener(
-      window.cast.framework.CastContextEventType.SESSION_STATE_CHANGED,
-      eventHandler
-    );
+    if (setupListener()) {
+      return () => cleanup?.();
+    }
+
+    const interval = setInterval(() => {
+      initializeCastPlayer();
+      if (setupListener()) {
+        clearInterval(interval);
+      }
+    }, 500);
 
     return () => {
-      context.removeEventListener(
-        window.cast.framework.CastContextEventType.SESSION_STATE_CHANGED,
-        eventHandler
-      );
+      clearInterval(interval);
+      cleanup?.();
     };
   }, []);
 
-  // Return a stable API object that wraps the current session
-  // This mimics the library's hook behavior better
+  // Load media to Cast device - matches react-native-google-cast API
+  const loadMedia = useCallback((request: any) => {
+    if (!castContextInitialized) {
+      return Promise.reject("Cast SDK not initialized");
+    }
 
-  const loadMedia = useCallback((mediaInfo: any) => {
-    const context = window.cast.framework.CastContext.getInstance();
-    const session = context.getCurrentSession();
-    if (!session) return Promise.reject("No session");
+    const castSession =
+      window.cast.framework.CastContext.getInstance().getCurrentSession();
+    if (!castSession) {
+      return Promise.reject("No active Cast session");
+    }
 
-    // Construct media info
+    // Extract URL and content type from request
     // Support both react-native-google-cast structure and direct structure
-    const url =
-      mediaInfo.mediaInfo?.contentUrl ||
-      mediaInfo.sourceUrl ||
-      mediaInfo.contentUrl;
+    const contentUrl =
+      request.mediaInfo?.contentUrl || request.contentUrl || request.sourceUrl;
     const contentType =
-      mediaInfo.mediaInfo?.contentType || mediaInfo.contentType || "video/mp4";
+      request.mediaInfo?.contentType || request.contentType || "video/mp4";
 
-    const mediaInfoWeb = new window.chrome.cast.media.MediaInfo(
-      url,
+    // Create MediaInfo object
+    const mediaInfo = new window.chrome.cast.media.MediaInfo(
+      contentUrl,
       contentType
     );
 
-    // Add metadata
-    const metadata = new window.chrome.cast.media.GenericMediaMetadata();
-    const metaSource =
-      mediaInfo.mediaInfo?.metadata || mediaInfo.metadata || {};
-    metadata.title = metaSource.title;
-    metadata.subtitle = metaSource.subtitle;
+    // Set up metadata
+    mediaInfo.metadata = new window.chrome.cast.media.GenericMediaMetadata();
+    mediaInfo.metadata.metadataType =
+      window.chrome.cast.media.MetadataType.GENERIC;
 
-    const images = metaSource.images;
-    if (images && images.length > 0) {
-      metadata.images = [new window.chrome.cast.Image(images[0].url)];
+    const metaSource = request.mediaInfo?.metadata || request.metadata || {};
+    mediaInfo.metadata.title = metaSource.title || "";
+    mediaInfo.metadata.subtitle = metaSource.subtitle || "";
+
+    // Add images if available
+    if (metaSource.images && metaSource.images.length > 0) {
+      mediaInfo.metadata.images = metaSource.images.map(
+        (img: any) => new window.chrome.cast.Image(img.url)
+      );
     }
-    mediaInfoWeb.metadata = metadata;
 
-    const request = new window.chrome.cast.media.LoadRequest(mediaInfoWeb);
-    request.autoplay = mediaInfo.autoplay !== false;
-    request.currentTime = mediaInfo.currentTime || 0;
+    // Create load request
+    const loadRequest = new window.chrome.cast.media.LoadRequest(mediaInfo);
+    loadRequest.autoplay = request.autoplay !== false;
+    loadRequest.currentTime = request.startTime || 0;
 
-    return session.loadMedia(request);
+    console.log("Loading media to Cast device:", contentUrl);
+
+    // Load media to Cast session
+    return castSession.loadMedia(loadRequest);
   }, []);
 
+  // Play current media
   const play = useCallback(() => {
-    const context = window.cast.framework.CastContext.getInstance();
-    const session = context.getCurrentSession();
-    if (session) {
-      const media = session.getMediaSession();
-      if (media) media.play();
+    if (!remotePlayerController || !remotePlayer) return;
+    if (remotePlayer.isPaused) {
+      remotePlayerController.playOrPause();
     }
   }, []);
 
+  // Pause current media
   const pause = useCallback(() => {
-    const context = window.cast.framework.CastContext.getInstance();
-    const session = context.getCurrentSession();
-    if (session) {
-      const media = session.getMediaSession();
-      if (media) media.pause();
+    if (!remotePlayerController || !remotePlayer) return;
+    if (!remotePlayer.isPaused) {
+      remotePlayerController.playOrPause();
     }
   }, []);
+
+  // Seek to position in seconds
+  const seek = useCallback((position: number) => {
+    if (!remotePlayerController || !remotePlayer) return;
+    remotePlayer.currentTime = position;
+    remotePlayerController.seek();
+  }, []);
+
+  // Stop casting and end session
+  const stop = useCallback(() => {
+    if (!remotePlayerController) return;
+    remotePlayerController.stop();
+  }, []);
+
+  // Return null if not connected (matches react-native-google-cast behavior)
+  if (!isConnected) {
+    return null;
+  }
 
   return {
     loadMedia,
     play,
     pause,
-    seek: (position: number) => {
-      const context = window.cast.framework.CastContext.getInstance();
-      const session = context.getCurrentSession();
-      if (session) {
-        const media = session.getMediaSession();
-        // Create seek request
-        const request = new window.chrome.cast.media.SeekRequest();
-        request.currentTime = position;
-        if (media) media.seek(request);
-      }
-    },
-    stop: () => {
-      const context = window.cast.framework.CastContext.getInstance();
-      const session = context.getCurrentSession();
-      if (session) {
-        session.endSession(true);
-      }
-    },
+    seek,
+    stop,
   };
 };
 
+// Hook for media status - basic implementation
 export const useMediaStatus = () => {
-  // Basic implementation for now
-  return null;
+  const [mediaStatus, setMediaStatus] = useState<any>(null);
+
+  useEffect(() => {
+    if (!castContextInitialized || !remotePlayerController) {
+      return;
+    }
+
+    const updateStatus = () => {
+      if (!remotePlayer) return;
+
+      setMediaStatus({
+        playerState: remotePlayer.playerState,
+        currentTime: remotePlayer.currentTime,
+        duration: remotePlayer.duration,
+        volume: remotePlayer.volumeLevel,
+        isMuted: remotePlayer.isMuted,
+      });
+    };
+
+    // Listen for media status changes
+    const handler = () => updateStatus();
+
+    remotePlayerController.addEventListener(
+      window.cast.framework.RemotePlayerEventType.PLAYER_STATE_CHANGED,
+      handler
+    );
+    remotePlayerController.addEventListener(
+      window.cast.framework.RemotePlayerEventType.CURRENT_TIME_CHANGED,
+      handler
+    );
+
+    return () => {
+      remotePlayerController.removeEventListener(
+        window.cast.framework.RemotePlayerEventType.PLAYER_STATE_CHANGED,
+        handler
+      );
+      remotePlayerController.removeEventListener(
+        window.cast.framework.RemotePlayerEventType.CURRENT_TIME_CHANGED,
+        handler
+      );
+    };
+  }, []);
+
+  return mediaStatus;
 };
 
 const styles = StyleSheet.create({
