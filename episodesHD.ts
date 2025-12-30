@@ -147,95 +147,95 @@ export const premiumizeData: Record<string, PremiumizeEpisode[]> = {
   ],
   season3: [
     {
-      url: "",
+      url: "https://5-cdn2-ovh-bea.energycdn.com/cdn3sto/excitedmink-sto/6952e2ff3f5094.55940688/569138316/1767053357/f12c5de47cbe91862640584fb6decb1aa4dbb13e/37487b59a7fbf79b804581b316e48b8c48ecaac8f11f21f9191e45b56ac5f144/03x02%20-%20El%20patriotismo%20de%20Lisa_hevc.mp4",
       name: "03x02 - El patriotismo de Lisa.mp4",
     },
     {
-      url: "",
+      url: "https://2-cdn2-ovh-bea.energycdn.com/cdn3sto/excitedmink-sto/6952ebb8125af8.79615463/569138316/1767053357/f12c5de47cbe91862640584fb6decb1aa4dbb13e/5f4b828f98142141dac0a3da048109c4ebdd996c02feceba2e1eb9bc2bc172d5/03x03%20-%20El%20di%CC%81a%20que%20cayo%CC%81%20Flanders_hevc.mp4",
       name: "03x03 - El día que cayó Flanders.mp4",
     },
     {
-      url: "",
+      url: "https://4-cdn2-ovh-bea.energycdn.com/cdn3sto/excitedmink-sto/6952eb3e5586b1.19981930/569138316/1767053357/f12c5de47cbe91862640584fb6decb1aa4dbb13e/b1053ba3d8ee876ad5a9918060b07f443739e6a2b75c39e03263c13e07f67b10/03x04%20-%20El%20pequen%CC%83o%20padrino_hevc.mp4",
       name: "03x04 - El pequeño padrino.mp4",
     },
     {
-      url: "",
+      url: "https://4-cdn2-ovh-bea.energycdn.com/cdn3sto/excitedmink-sto/6952e87e6f41e6.58666711/569138316/1767053357/f12c5de47cbe91862640584fb6decb1aa4dbb13e/ea219286908079045635995e1278f47d34233048fad3bdbf9a76b0a1e70fcf64/03x05%20-%20Homero%20al%20diccionario_hevc.mp4",
       name: "03x05 - Homero al diccionario.mp4",
     },
     {
-      url: "",
+      url: "https://4-cdn2-ovh-bea.energycdn.com/cdn3sto/excitedmink-sto/6952e7da436184.72835541/569138316/1767053357/f12c5de47cbe91862640584fb6decb1aa4dbb13e/61c8b007af08e98931ce2f19431ed7cd96a71946fc73bf5c3b1364e16a491f6e/03x06%20-%20De%20tal%20padre%2C%20tal%20payaso_hevc.mp4",
       name: "03x06 - De tal padre, tal payaso.mp4",
     },
     {
-      url: "",
+      url: "https://7-cdn2-ovh-bea.energycdn.com/cdn3sto/excitedmink-sto/6952e6afcc8a58.26966025/569138316/1767053357/f12c5de47cbe91862640584fb6decb1aa4dbb13e/33c6aa04ca9557c604e00d1edb12147b8a3b404889f34232ea4807cf3a8422e9/03x07%20-%20Especial%20de%20di%CC%81a%20de%20brujas%20de%20los%20Simpson%20II_hevc.mp4",
       name: "03x07 - Especial de día de brujas de los Simpson II.mp4",
     },
     {
-      url: "",
+      url: "https://3-cdn2-ovh-bea.energycdn.com/cdn3sto/excitedmink-sto/6952e563e61ee9.56565840/569138316/1767053357/f12c5de47cbe91862640584fb6decb1aa4dbb13e/59045b62ceef969f1f5e1e9c7e22f1506deacb59de564dc773d4e9e044fdd1e6/03x08%20-%20El%20pony%20de%20Lisa_hevc.mp4",
       name: "03x08 - El pony de Lisa.mp4",
     },
     {
-      url: "",
+      url: "https://4-cdn2-ovh-bea.energycdn.com/cdn3sto/excitedmink-sto/6952e4d942cab6.34629731/569138316/1767053357/f12c5de47cbe91862640584fb6decb1aa4dbb13e/febfd53a6f5c86ac9e4217831a2de728f9b8b3245ebff69c9cc0c89018292f85/03x09%20-%20Tardes%20de%20trueno_hevc.mp4",
       name: "03x09 - Tardes de trueno.mp4",
     },
     {
-      url: "",
+      url: "https://3-cdn2-ovh-bea.energycdn.com/cdn3sto/excitedmink-sto/6952e387c1f9b1.87590492/569138316/1767053357/f12c5de47cbe91862640584fb6decb1aa4dbb13e/054ca816aca2d5a1f8b8841ab5edab7d3962f5c408d9c45d9d195739b4074889/03x10%20-%20Llamarada%20Moe_hevc.mp4",
       name: "03x10 - Llamarada Moe.mp4",
     },
     {
-      url: "",
+      url: "https://6-cdn2-ovh-bea.energycdn.com/cdn3sto/educatedcrab-sto/69531397c6cd09.90596572/569138316/1767053357/f12c5de47cbe91862640584fb6decb1aa4dbb13e/f373f75c87f35e8a420af9ace9c6dbd902165e9a24e049721a7d8af22c62b0e8/03x11%20-%20Burns%20y%20los%20alemanes_hevc.mp4",
       name: "03x11 - Burns y los alemanes.mp4",
     },
     {
-      url: "",
+      url: "https://6-cdn2-ovh-bea.energycdn.com/cdn3sto/educatedcrab-sto/695313f81c7435.71865107/569138316/1767053357/f12c5de47cbe91862640584fb6decb1aa4dbb13e/b5b91e5cf0f81076db70e261d69bb51170ff3ba22e54ec3068bbbe1e81d11ea3/03x12%20-%20Me%20case%CC%81%20con%20Marge_hevc.mp4",
       name: "03x12 - Me casé con Marge.mp4",
     },
     {
-      url: "",
+      url: "https://3-cdn2-ovh-bea.energycdn.com/cdn3sto/educatedcrab-sto/695314712ea580.34463307/569138316/1767053357/f12c5de47cbe91862640584fb6decb1aa4dbb13e/e853d2b948e7e2f17d3a57d22f96384d441d8bef0675386f82a425f8459e940e/03x13%20-%20Bart%20y%20la%20radio_hevc.mp4",
       name: "03x13 - Bart y la radio.mp4",
     },
     {
-      url: "",
+      url: "https://3-cdn2-ovh-bea.energycdn.com/cdn3sto/educatedcrab-sto/695314d42fe403.06345437/569138316/1767053357/f12c5de47cbe91862640584fb6decb1aa4dbb13e/43dd0be24db96614323b4aefc62f40e663a8b1742457ac2e5375413c61dcb056/03x14%20-%20Los%20prono%CC%81sticos%20de%20Lisa_hevc.mp4",
       name: "03x14 - Los pronósticos de Lisa.mp4",
     },
     {
-      url: "",
+      url: "https://6-cdn2-ovh-bea.energycdn.com/cdn3sto/educatedcrab-sto/6953153e746317.65291640/569138316/1767053357/f12c5de47cbe91862640584fb6decb1aa4dbb13e/fcf1a798066604c9a2f4ee70ac4a9c06accef103917563b05245802cbc7a14fd/03x15%20-%20Homero%20se%20queda%20solo_hevc.mp4",
       name: "03x15 - Homero se queda solo.mp4",
     },
     {
-      url: "",
+      url: "https://0-cdn2-ovh-bea.energycdn.com/cdn3sto/educatedcrab-sto/6953159c3a3a16.65089368/569138316/1767053357/f12c5de47cbe91862640584fb6decb1aa4dbb13e/3a49ab8e548b0f662c83aff25c130a6cbee931b1b5741a3f682e01f410747f29/03x16%20-%20Bart%2C%20el%20amante_hevc.mp4",
       name: "03x16 - Bart, el amante.mp4",
     },
     {
-      url: "",
+      url: "https://6-cdn2-ovh-bea.energycdn.com/cdn3sto/educatedcrab-sto/695315eeb78132.93005859/569138316/1767053357/f12c5de47cbe91862640584fb6decb1aa4dbb13e/71be99a18cd18b51012f8a03c59c86ef479206ddfbb441d0ec89c66801117ad6/03x17%20-%20Homero%20al%20bat_hevc.mp4",
       name: "03x17 - Homero al bat.mp4",
     },
     {
-      url: "",
+      url: "https://0-cdn2-ovh-bea.energycdn.com/cdn3sto/educatedcrab-sto/69531635b7b550.72086543/569138316/1767053357/f12c5de47cbe91862640584fb6decb1aa4dbb13e/38e8a3b7724b57e42d86de226e996d5de0321bbf4e087927729d019198592185/03x18%20-%20Vocaciones%20distintas_hevc.mp4",
       name: "03x18 - Vocaciones distintas.mp4",
     },
     {
-      url: "",
+      url: "https://5-cdn2-ovh-bea.energycdn.com/cdn3sto/educatedcrab-sto/695316799dbf89.08202650/569138316/1767053357/f12c5de47cbe91862640584fb6decb1aa4dbb13e/18a7213c90132f8576ffca57cbc978068b5510b238a2eb0188e448739065b901/03x19%20-%20Nuestro%20mejor%20amigo_hevc.mp4",
       name: "03x19 - Nuestro mejor amigo.mp4",
     },
     {
-      url: "",
+      url: "https://6-cdn2-ovh-bea.energycdn.com/cdn3sto/educatedcrab-sto/695316b80b05f5.43722900/569138316/1767053357/f12c5de47cbe91862640584fb6decb1aa4dbb13e/912934796ae03fc74592ae69c2fad636a9060fadaa6a1ee441633cfe30e21d97/03x20%20-%20Homero%20el%20campirano_hevc.mp4",
       name: "03x20 - Homero el campirano.mp4",
     },
     {
-      url: "",
+      url: "https://5-cdn2-ovh-bea.energycdn.com/cdn3sto/educatedcrab-sto/695317139e5734.75164636/569138316/1767053357/f12c5de47cbe91862640584fb6decb1aa4dbb13e/aaf892d19b50bf00f24b682b16c7999bc8e0a2685c9ad9ef5b0a1f452cf4f25e/03x21%20-%20El%20viudo%20negro_hevc.mp4https://5-cdn2-ovh-bea.energycdn.com/cdn3sto/educatedcrab-sto/695317139e5734.75164636/569138316/1767053357/f12c5de47cbe91862640584fb6decb1aa4dbb13e/aaf892d19b50bf00f24b682b16c7999bc8e0a2685c9ad9ef5b0a1f452cf4f25e/03x21%20-%20El%20viudo%20negro_hevc.mp4",
       name: "03x21 - El viudo negro.mp4",
     },
     {
-      url: "",
+      url: "https://2-cdn2-ovh-bea.energycdn.com/cdn3sto/educatedcrab-sto/69531780b2b7f8.64199813/569138316/1767053357/f12c5de47cbe91862640584fb6decb1aa4dbb13e/0fa1b30c00586d9757c6e7d603caf142d76288145fb5f02f2cd3cebfe3b7bb9a/03x22%20-%20El%20rock%20de%20Otto_hevc.mp4",
       name: "03x22 - El rock de Otto.mp4",
     },
     {
-      url: "",
+      url: "https://3-cdn2-ovh-bea.energycdn.com/cdn3sto/educatedcrab-sto/695317df652b56.79530627/569138316/1767053357/f12c5de47cbe91862640584fb6decb1aa4dbb13e/999b3123cfb79d345ea83008f665b6dbbffd449d99f2458d6010efb4fd0b9df5/03x23%20-%20Milhouse%20se%20enamora_hevc.mp4",
       name: "03x23 - Milhouse se enamora.mp4",
     },
     {
-      url: "",
+      url: "https://5-cdn2-ovh-bea.energycdn.com/cdn3sto/educatedcrab-sto/6953182d3ee038.51398360/569138316/1767053357/f12c5de47cbe91862640584fb6decb1aa4dbb13e/d94b1419a6d285476b21bdc90b3b77256405d278ee4a147374fc58cab3001647/03x24%20-%20E%CC%81l%20es%20mi%20hermano_hevc.mp4",
       name: "03x24 - Él es mi hermano.mp4",
     },
   ],
