@@ -10,12 +10,19 @@ import {
   Text,
   TouchableOpacity,
   SafeAreaView,
+  Platform,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { theme } from "./theme";
 import { RootStackParamList } from "./types";
+import {
+  CastButton,
+  useRemoteMediaClient,
+  useCastState,
+  CastState,
+} from "./services/useCast";
 
 type VideoPlayerProps = NativeStackScreenProps<
   RootStackParamList,
@@ -31,6 +38,31 @@ export function VideoPlayer({ route }: VideoPlayerProps): React.JSX.Element {
   const player = useVideoPlayer(url, (player) => {
     player.play();
   });
+
+  // Cast integration
+  const castState = useCastState();
+  const remoteMediaClient = useRemoteMediaClient();
+
+  useEffect(() => {
+    if (castState === CastState.CONNECTED && remoteMediaClient) {
+      // Cast the video
+      remoteMediaClient.loadMedia({
+        mediaInfo: {
+          contentUrl: url,
+          contentType: "video/mp4",
+          metadata: {
+            type: "movie",
+            title: episodeName,
+            subtitle: season,
+            images: [],
+          },
+        },
+        autoplay: true,
+      });
+      // Pause local player when casting starts
+      player.pause();
+    }
+  }, [castState, remoteMediaClient, url, episodeName, season]);
 
   const videoViewRef = useRef<VideoView>(null);
 
@@ -105,18 +137,29 @@ export function VideoPlayer({ route }: VideoPlayerProps): React.JSX.Element {
           </Text>
           <Text style={styles.subtitle}>{season}</Text>
         </View>
+        <View style={styles.castButtonContainer}>
+          <CastButton style={{ width: 24, height: 24, tintColor: "white" }} />
+        </View>
       </View>
 
       <View style={styles.videoContainer}>
-        <VideoView
-          ref={videoViewRef}
-          player={player}
-          style={styles.video}
-          allowsFullscreen
-          allowsPictureInPicture
-          contentFit="contain"
-        />
-        {isLoading && (
+        {castState === CastState.CONNECTED ? (
+          <View style={styles.castingContainer}>
+            <Ionicons name="tv-outline" size={64} color="white" />
+            <Text style={styles.castingText}>Casting to device</Text>
+          </View>
+        ) : (
+          <VideoView
+            ref={videoViewRef}
+            player={player}
+            style={styles.video}
+            allowsFullscreen
+            allowsPictureInPicture
+            contentFit="contain"
+          />
+        )}
+
+        {isLoading && castState !== CastState.CONNECTED && (
           <ActivityIndicator
             size="large"
             color={theme.colors.primary}
@@ -176,10 +219,27 @@ const styles = StyleSheet.create({
     color: "#ccc",
     fontSize: 14,
   },
+  castButtonContainer: {
+    marginLeft: 10,
+    width: 44, // increase touch target
+    height: 44,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   videoContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  castingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  castingText: {
+    color: "white",
+    marginTop: 20,
+    fontSize: 18,
   },
   video: {
     width: "100%",
