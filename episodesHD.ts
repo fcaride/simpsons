@@ -241,63 +241,63 @@ export const premiumizeData: Record<string, PremiumizeEpisode[]> = {
   ],
   season4: [
     {
-      url: "",
+      url: "https://4-cdn2-ovh-bea.energycdn.com/cdn3sto/quietcow-sto/69532892c93aa6.23458634/569138316/1767062176/f12c5de47cbe91862640584fb6decb1aa4dbb13e/254b3516059216cdc7752749f566e21c315baab03a97037f6588ac388d124735/04x01%20-%20Kampo%20Krusty_hevc.mp4",
       name: "04x01 - Kampo Krusty.mp4",
     },
     {
-      url: "",
+      url: "https://4-cdn2-ovh-bea.energycdn.com/cdn3sto/quietcow-sto/6953285d0d74e5.25965436/569138316/1767062176/f12c5de47cbe91862640584fb6decb1aa4dbb13e/9a68fc81cbd1ec51856250e0ae20f0ccb80e0642319ed01d8eff89478df2fd39/04x02%20-%20Un%20tranvi%CC%81a%20llamado%20Marge_hevc.mp4",
       name: "04x02 - Un tranvía llamado Marge.mp4",
     },
     {
-      url: "",
+      url: "https://5-cdn2-ovh-bea.energycdn.com/cdn3sto/quietcow-sto/6953281b44b634.89663924/569138316/1767062176/f12c5de47cbe91862640584fb6decb1aa4dbb13e/08762a7e75dcc4d899d92fcb43bbb20e8bb9f8bcde03ea49069f438eea50c264/04x03%20-%20Homero%20hereje_hevc.mp4",
       name: "04x03 - Homero hereje.mp4",
     },
     {
-      url: "",
+      url: "https://6-cdn2-ovh-bea.energycdn.com/cdn3sto/quietcow-sto/695327c7aa5b28.95716807/569138316/1767062176/f12c5de47cbe91862640584fb6decb1aa4dbb13e/6586a47d69f7ca69e983c6c8fa08e8d976b944500a0592ba4e27b85682254c8b/04x04%20-%20La%20reina%20de%20la%20belleza_hevc.mp4",
       name: "04x04 - La reina de la belleza.mp4",
     },
     {
-      url: "",
+      url: "https://6-cdn2-ovh-bea.energycdn.com/cdn3sto/quietcow-sto/69532775855aa0.32760305/569138316/1767062176/f12c5de47cbe91862640584fb6decb1aa4dbb13e/fa46a4292f1db19c0075b21f88b975885b73da003141a5ca9560a1cccf0bd59d/04x05%20-%20Especial%20de%20noche%20de%20brujas%20III_hevc.mp4",
       name: "04x05 - Especial de noche de brujas III.mp4",
     },
     {
-      url: "",
+      url: "https://4-cdn2-ovh-bea.energycdn.com/cdn3sto/quietcow-sto/6953270f7cd117.40858007/569138316/1767062176/f12c5de47cbe91862640584fb6decb1aa4dbb13e/48f59e426a3448eb7828ea00c1947a179008d3fca3a0431961e6eac6d1e18550/04x06%20-%20Tomy%20y%20Daly%20La%20peli%CC%81cula_hevc.mp4",
       name: "04x06 - Tomy y Daly La película.mp4",
     },
     {
-      url: "",
+      url: "https://0-cdn2-ovh-bea.energycdn.com/cdn3sto/quietcow-sto/695326d3e98237.99307614/569138316/1767062176/f12c5de47cbe91862640584fb6decb1aa4dbb13e/69a82b67fd6ef8ef017747429adb4c116d6071401e7683cd1d74e5997b79b160/04x07%20-%20Marge%20consigue%20empleo_hevc.mp4",
       name: "04x07 - Marge consigue empleo.mp4",
     },
     {
-      url: "",
+      url: "https://1-cdn2-ovh-bea.energycdn.com/cdn3sto/quietcow-sto/69532678d66cc3.70025363/569138316/1767062176/f12c5de47cbe91862640584fb6decb1aa4dbb13e/2397ce6360c54338b4699eaec58eb134116432a018e9b47299be77cd78694512/04x08%20-%20La%20chica%20nueva_hevc.mp4",
       name: "04x08 - La chica nueva.mp4",
     },
     {
-      url: "",
+      url: "https://5-cdn2-ovh-bea.energycdn.com/cdn3sto/quietcow-sto/695326341de5b3.39573794/569138316/1767062176/f12c5de47cbe91862640584fb6decb1aa4dbb13e/bc788bea865acdacf5a9623ced2e3cc1cae0aeb4c5a5318e42a89f81e2287e2f/04x09%20-%20Don%20Barredora_hevc.mp4",
       name: "04x09 - Don Barredora.mp4",
     },
     {
-      url: "",
+      url: "https://2-cdn2-ovh-bea.energycdn.com/cdn3sto/quietcow-sto/695325f2cefbd6.18939840/569138316/1767062176/f12c5de47cbe91862640584fb6decb1aa4dbb13e/461daae700f1b3819f4276c01e2c1034c3c552d65b8dde2f9721bb6c4d434c32/04x10%20-%20La%20primera%20palabra%20de%20Maggie_hevc.mp4",
       name: "04x10 - La primera palabra de Maggie.mp4",
     },
     {
-      url: "",
+      url: "https://3-cdn2-ovh-bea.energycdn.com/cdn3sto/quietcow-sto/695325a8d28402.53209021/569138316/1767062176/f12c5de47cbe91862640584fb6decb1aa4dbb13e/bab42d84b52bc50d3d5209ca7af382c3643bf9d60ec0978ffbfc366b5561f330/04x11%20-%20El%20gran%20corazo%CC%81n%20de%20Homero_hevc.mp4",
       name: "04x11 - El gran corazón de Homero.mp4",
     },
     {
-      url: "",
+      url: "https://3-cdn2-ovh-bea.energycdn.com/cdn3sto/quietcow-sto/6953257e7cee31.57722452/569138316/1767062176/f12c5de47cbe91862640584fb6decb1aa4dbb13e/65c689460b98b187ea818f7245c69d50aacc8cdc477f7ccf040a05da7411409a/04x12%20-%20Marge%20contra%20el%20Monorriel_hevc.mp4",
       name: "04x12 - Marge contra el Monorriel.mp4",
     },
     {
-      url: "",
+      url: "https://4-cdn2-ovh-bea.energycdn.com/cdn3sto/quietcow-sto/6953252caaec21.66886465/569138316/1767062176/f12c5de47cbe91862640584fb6decb1aa4dbb13e/95878e19355708fa0762bd6467752ebb41bd266237795cece8aed2f555c4f064/04x13%20-%20La%20eleccio%CC%81n%20de%20Selma_hevc.mp4",
       name: "04x13 - La elección de Selma.mp4",
     },
     {
-      url: "",
+      url: "https://6-cdn2-ovh-bea.energycdn.com/cdn3sto/quietcow-sto/695324e8757c61.94385724/569138316/1767062327/f12c5de47cbe91862640584fb6decb1aa4dbb13e/f266a1e2ab854876defbbb611cc4a9c55b929a3b8a5d919da271de680414fff9/04x15%20-%20Yo%20amo%20a%20Lisa_hevc.mp4",
       name: "04x15 - Yo amo a Lisa.mp4",
     },
     {
-      url: "",
+      url: "https://1-cdn2-ovh-bea.energycdn.com/cdn3sto/sillymonkey-sto/69533b368e8cb1.69324590/569138316/1767062327/f12c5de47cbe91862640584fb6decb1aa4dbb13e/9466d10e67af27e654bc1ca2693044d86e425fb2d11a54ccee5aaf6cef850bf3/04x16%20-%20La%20promesa_hevc.mp4",
       name: "04x16 - La promesa.mp4",
     },
     {
