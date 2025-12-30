@@ -10,7 +10,7 @@ import {
   CastState,
   useCastState,
   useRemoteMediaClient,
-} from "react-native-google-cast";
+} from "./services/useCast";
 import { Home } from "./Home";
 import { getSectionsEpisodes } from "./utils";
 import { VideoPlayer } from "./VideoPlayer";

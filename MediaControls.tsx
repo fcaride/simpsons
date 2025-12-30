@@ -11,7 +11,7 @@ import {
   MediaPlayerState,
   useCastState,
   CastState,
-} from "react-native-google-cast";
+} from "./services/useCast";
 import { theme } from "./theme";
 
 export const MediaControls = (): React.JSX.Element | null => {

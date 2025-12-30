@@ -3,7 +3,7 @@ import {
   useRemoteMediaClient,
   useCastState,
   CastState,
-} from "react-native-google-cast";
+} from "./services/useCast";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Ionicons } from "@expo/vector-icons";

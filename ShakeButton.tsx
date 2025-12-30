@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { Animated, Easing, StyleSheet, TouchableOpacity } from "react-native";
-import { useRemoteMediaClient } from "react-native-google-cast";
+import { useRemoteMediaClient } from "./services/useCast";
 import { getSectionsEpisodes } from "./utils";
 
 export const ShakeButton = (): React.JSX.Element => {
