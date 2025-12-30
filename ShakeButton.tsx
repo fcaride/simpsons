@@ -1,12 +1,17 @@
 import React, { useEffect, useRef } from "react";
 import { Animated, Easing, StyleSheet, TouchableOpacity } from "react-native";
-import { useRemoteMediaClient } from "./services/useCast";
+import {
+  useRemoteMediaClient,
+  useCastState,
+  CastState,
+} from "./services/useCast";
 import { getSectionsEpisodes } from "./utils";
 
-export const ShakeButton = (): React.JSX.Element => {
+export const ShakeButton = (): React.JSX.Element | null => {
   const animation = useRef(new Animated.Value(0)).current;
 
   const client = useRemoteMediaClient();
+  const castState = useCastState();
 
   const sectionsEpisodes = getSectionsEpisodes();
 
@@ -89,6 +94,11 @@ export const ShakeButton = (): React.JSX.Element => {
   useEffect(() => {
     startAnimation();
   }, []);
+
+  // Only show button when Chromecast is connected
+  if (castState !== CastState.CONNECTED) {
+    return null;
+  }
 
   return (
     <TouchableOpacity onPress={randomCast} style={styles.floatingButton}>
