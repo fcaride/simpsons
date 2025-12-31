@@ -56,12 +56,52 @@ class PremiumizeService {
    * List contents of a folder by ID
    * If no ID is provided, lists the root folder
    */
+  private cache: Map<string, { timestamp: number; data: any }> = new Map();
+  private pendingRequests: Map<string, Promise<any>> = new Map();
+  private CACHE_DURATION = 1000 * 60 * 5; // 5 minutes cache
+
+  /**
+   * List contents of a folder by ID
+   * If no ID is provided, lists the root folder
+   */
   async listFolder(folderId?: string): Promise<PremiumizeFolderResponse> {
+    const cacheKey = folderId || "root";
+
+    // Check cache first
+    const cached = this.cache.get(cacheKey);
+    if (cached && Date.now() - cached.timestamp < this.CACHE_DURATION) {
+      return cached.data;
+    }
+
+    // Check if request is already in flight (deduping)
+    if (this.pendingRequests.has(cacheKey)) {
+      return this.pendingRequests.get(
+        cacheKey
+      ) as Promise<PremiumizeFolderResponse>;
+    }
+
     const params: Record<string, string> = {};
     if (folderId) {
       params.id = folderId;
     }
-    return this.request<PremiumizeFolderResponse>("/folder/list", params);
+
+    // Create new request promise
+    const requestPromise = this.request<PremiumizeFolderResponse>(
+      "/folder/list",
+      params
+    )
+      .then((data) => {
+        // Cache successful response
+        this.cache.set(cacheKey, { timestamp: Date.now(), data });
+        return data;
+      })
+      .finally(() => {
+        // Remove from pending requests when done
+        this.pendingRequests.delete(cacheKey);
+      });
+
+    this.pendingRequests.set(cacheKey, requestPromise);
+    return requestPromise;
   }
 
   /**
