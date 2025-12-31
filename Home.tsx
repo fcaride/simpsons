@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   SafeAreaView,
   SectionList,
@@ -9,35 +9,12 @@ import {
 } from "react-native";
 import { Item } from "./Item";
 import { MediaControls } from "./MediaControls";
-import { getSectionsEpisodes } from "./utils";
 import { theme } from "./theme";
 import { ShakeButton } from "./ShakeButton";
-import { SeasonData } from "./types";
+import { useEpisodes } from "./hooks/useEpisodes";
 
 export function Home(): React.JSX.Element {
-  const [sectionsEpisodes, setSectionsEpisodes] = useState<SeasonData[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchEpisodes = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const data = await getSectionsEpisodes();
-        setSectionsEpisodes(data);
-      } catch (err) {
-        console.error("Failed to fetch episodes:", err);
-        setError(
-          err instanceof Error ? err.message : "Failed to load episodes"
-        );
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchEpisodes();
-  }, []);
+  const { episodes, loading, error } = useEpisodes();
 
   if (loading) {
     return (
@@ -66,7 +43,7 @@ export function Home(): React.JSX.Element {
   return (
     <SafeAreaView style={styles.container}>
       <SectionList
-        sections={sectionsEpisodes}
+        sections={episodes}
         keyExtractor={(item, index) => `${item.episodeName}-${index}`}
         renderItem={({ item }) => <Item item={item} />}
         renderSectionHeader={({ section: { season } }) => (
