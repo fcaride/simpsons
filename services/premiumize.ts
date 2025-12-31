@@ -124,7 +124,10 @@ class PremiumizeService {
 
     // Filter for video files and sort by name
     return contents.content
-      .filter((item) => item.type === "file") // Removed && item.stream_link
+      .filter(
+        (item) =>
+          item.type === "file" && item.name.toLowerCase().endsWith(".mp4")
+      )
       .sort((a, b) =>
         a.name.localeCompare(b.name, undefined, { numeric: true })
       );

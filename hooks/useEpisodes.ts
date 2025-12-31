@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { premiumizeService } from "../services/premiumize";
 import { SeasonData } from "../types";
 
@@ -18,7 +18,12 @@ export function useEpisodes(): UseEpisodesResult {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const hasFetched = useRef(false);
+
   const fetchEpisodes = useCallback(async () => {
+    if (hasFetched.current) return;
+    hasFetched.current = true;
+
     try {
       setLoading(true);
       setError(null);
@@ -27,6 +32,8 @@ export function useEpisodes(): UseEpisodesResult {
     } catch (err) {
       console.error("Failed to fetch episodes:", err);
       setError(err instanceof Error ? err.message : "Failed to load episodes");
+      // Reset so we can try again if it failed
+      hasFetched.current = false;
     } finally {
       setLoading(false);
     }
