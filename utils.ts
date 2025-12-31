@@ -1,4 +1,4 @@
-import { premiumizeData } from "./episodesHD";
+import { premiumizeService } from "./services/premiumize";
 import { SeasonData } from "./types";
 
 const formatName = (name: string): string => {
@@ -9,8 +9,24 @@ const formatName = (name: string): string => {
     : name;
 };
 
-export const getSectionsEpisodes = (): SeasonData[] => {
-  return Object.values(premiumizeData)
+/**
+ * Fetch all episodes from Premiumize API
+ * Returns sections formatted for SectionList
+ */
+export const getSectionsEpisodes = async (): Promise<SeasonData[]> => {
+  return await premiumizeService.getAllEpisodes();
+};
+
+/**
+ * Legacy function for static data (kept for reference/fallback)
+ * @deprecated Use getSectionsEpisodes() instead
+ */
+export const getSectionsEpisodesStatic = (): SeasonData[] => {
+  // This can be removed once Premiumize integration is verified
+  const { premiumizeData } = require("./episodesHD");
+  return Object.values(
+    premiumizeData as Record<string, { url: string; name: string }[]>
+  )
     .map((season, index) => ({
       season: `Temporada ${index + 1}`,
       data: season

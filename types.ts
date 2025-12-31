@@ -73,3 +73,22 @@ export interface Theme {
     };
   };
 }
+
+// Premiumize API Types
+export interface PremiumizeItem {
+  id: string;
+  name: string;
+  type: "file" | "folder";
+  size?: number;
+  link?: string;
+  stream_link?: string;
+  created_at?: number;
+}
+
+export interface PremiumizeFolderResponse {
+  status: string;
+  content: PremiumizeItem[];
+  name?: string;
+  parent_id?: string;
+  folder_id?: string;
+}
