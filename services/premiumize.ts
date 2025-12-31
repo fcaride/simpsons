@@ -110,9 +110,21 @@ class PremiumizeService {
   ): Promise<PremiumizeItem[]> {
     const contents = await this.listFolder(seasonFolderId);
 
+    console.log(
+      `[Premiumize] Season folder ${seasonFolderId} contents:`,
+      contents.content.length,
+      "items"
+    );
+    if (contents.content.length > 0) {
+      console.log(
+        `[Premiumize] First item sample:`,
+        JSON.stringify(contents.content[0], null, 2)
+      );
+    }
+
     // Filter for video files and sort by name
     return contents.content
-      .filter((item) => item.type === "file" && item.stream_link)
+      .filter((item) => item.type === "file") // Removed && item.stream_link
       .sort((a, b) =>
         a.name.localeCompare(b.name, undefined, { numeric: true })
       );
