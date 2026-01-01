@@ -5,42 +5,63 @@ import {
   useCastState,
   CastState,
 } from "./services/useCast";
-import { getSectionsEpisodes } from "./utils";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "./types";
+import { useEpisodes } from "./hooks/useEpisodes";
 
 export const ShakeButton = (): React.JSX.Element | null => {
   const animation = useRef(new Animated.Value(0)).current;
 
   const client = useRemoteMediaClient();
   const castState = useCastState();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
-  const sectionsEpisodes = getSectionsEpisodes();
+  const { episodes } = useEpisodes();
 
-  const randomCast = () => {
-    const flattenList = sectionsEpisodes.map((section) => section.data).flat();
-    const items = flattenList.map((episode) => {
-      const { url, episodeName, season } = episode;
-      return {
-        mediaInfo: {
-          contentUrl: url,
-          metadata: {
-            title: episodeName,
-            subtitle: season,
-          } as any,
+  const handleRandomPress = () => {
+    const flattenList = episodes.map((section) => section.data).flat();
+
+    if (flattenList.length === 0) return;
+
+    if (castState === CastState.CONNECTED) {
+      const items = flattenList.map((episode) => {
+        const { url, episodeName, season } = episode;
+        return {
+          mediaInfo: {
+            contentUrl: url,
+            metadata: {
+              title: episodeName,
+              subtitle: season,
+            } as any,
+          },
+          preloadTime: 30,
+        };
+      });
+      // Shuffle items using Fisher-Yates algorithm
+      for (let i = items.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [items[i], items[j]] = [items[j], items[i]];
+      }
+
+      client?.loadMedia({
+        queueData: {
+          items,
         },
-        preloadTime: 30,
-      };
-    });
-    for (let i = items.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [items[i], items[j]] = [items[j], items[i]];
+      });
+    } else {
+      // Local play: pick one random episode
+      const randomIndex = Math.floor(Math.random() * flattenList.length);
+      const randomEpisode = flattenList[randomIndex];
+      navigation.navigate("VideoPlayer", {
+        url: randomEpisode.url,
+        episodeName: randomEpisode.episodeName,
+        season: randomEpisode.season,
+      });
     }
-
-    client?.loadMedia({
-      queueData: {
-        items,
-      },
-    });
   };
+
   const startAnimation = () => {
     Animated.loop(
       Animated.sequence([
@@ -95,13 +116,12 @@ export const ShakeButton = (): React.JSX.Element | null => {
     startAnimation();
   }, []);
 
-  // Only show button when Chromecast is connected
-  if (castState !== CastState.CONNECTED) {
-    return null;
-  }
-
   return (
-    <TouchableOpacity onPress={randomCast} style={styles.floatingButton}>
+    <TouchableOpacity
+      onPress={handleRandomPress}
+      style={styles.floatingButton}
+      activeOpacity={0.8}
+    >
       <Animated.Image
         style={{
           width: 100,
