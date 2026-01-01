@@ -3,16 +3,10 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
-import { Text, TouchableOpacity, StyleSheet, AppState } from "react-native";
+import { StyleSheet, AppState } from "react-native";
 import * as Updates from "expo-updates";
-import {
-  CastButton,
-  CastState,
-  useCastState,
-  useRemoteMediaClient,
-} from "./services/useCast";
+import { CastButton } from "./services/useCast";
 import { Home } from "./Home";
-import { getSectionsEpisodes } from "./utils";
 import { VideoPlayer } from "./VideoPlayer";
 import { theme } from "./theme";
 import { RootStackParamList } from "./types";
@@ -27,9 +21,6 @@ const shuffleArray = <T,>(array: T[]): void => {
 };
 
 function App(): React.JSX.Element {
-  const client = useRemoteMediaClient();
-  const castState = useCastState();
-
   const onFetchUpdateAsync = React.useCallback(async () => {
     if (__DEV__) {
       return;
@@ -60,31 +51,6 @@ function App(): React.JSX.Element {
     };
   }, [onFetchUpdateAsync]);
 
-  const sectionsEpisodes = getSectionsEpisodes();
-
-  const randomCast = () => {
-    const flattenList = sectionsEpisodes.map((section) => section.data).flat();
-    const items = flattenList.map((episode) => {
-      const { url, episodeName, season } = episode;
-      return {
-        mediaInfo: {
-          contentUrl: url,
-          metadata: {
-            title: episodeName,
-            subtitle: season,
-          } as any,
-        },
-        preloadTime: 30,
-      };
-    });
-    shuffleArray(items);
-    client?.loadMedia({
-      queueData: {
-        items,
-      },
-    });
-  };
-
   return (
     <NavigationContainer>
       <Stack.Navigator
@@ -108,15 +74,6 @@ function App(): React.JSX.Element {
                 style={{ width: 24, height: 24, tintColor: theme.colors.black }}
               />
             ),
-            headerLeft: () =>
-              castState === CastState.CONNECTED && (
-                <TouchableOpacity
-                  onPress={randomCast}
-                  style={styles.randomButton}
-                >
-                  <Text style={styles.randomButtonText}>Random Play</Text>
-                </TouchableOpacity>
-              ),
           }}
         />
         <Stack.Screen
