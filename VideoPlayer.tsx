@@ -114,6 +114,7 @@ export function VideoPlayer({ route }: VideoPlayerProps): React.JSX.Element {
       // Hide spinner when video is ready to play
       if (status.status === "readyToPlay") {
         setIsLoading(false);
+        player.play();
       }
     });
 
