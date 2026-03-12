@@ -17,7 +17,7 @@ export enum MediaPlayerState {
   UNKNOWN = "unknown",
 }
 
-export const CastButton = () => null;
+export const CastButton = (_props: { style?: { width?: number; height?: number; tintColor?: string } }) => null;
 
 export const CastContext = {
   endCurrentSession: (_stopCasting: boolean) => {},
