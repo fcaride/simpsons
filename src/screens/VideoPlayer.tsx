@@ -21,6 +21,7 @@ import {
   useRemoteMediaClient,
   useCastState,
   CastState,
+  prepareForCast,
 } from "../services/useCast";
 
 type VideoPlayerProps = NativeStackScreenProps<
@@ -42,6 +43,10 @@ export function VideoPlayer({ route }: VideoPlayerProps): React.JSX.Element {
   useEffect(() => {
     castStateRef.current = castState;
   }, [castState]);
+
+  useEffect(() => {
+    prepareForCast(url);
+  }, [url]);
 
   const player = useVideoPlayer(url, (player) => {
     if (castState !== CastState.CONNECTED) {

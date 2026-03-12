@@ -5,6 +5,7 @@ import {
   useCastState,
   CastState,
 } from "../services/useCast";
+import { Platform } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList, SeasonData } from "../types";
@@ -65,6 +66,24 @@ export const ShakeButton = ({
             },
           }));
           await (client as any).queueInsertItems(queueItems);
+        }
+      } else if (Platform.OS === "web") {
+        const mod = await import("../services/useCast");
+        const casted =
+          "castQueue" in mod &&
+          (await (mod as any).castQueue(
+            selected.map((ep) => ({
+              url: ep.url,
+              title: ep.episodeName,
+              subtitle: ep.season,
+            }))
+          ));
+        if (!casted) {
+          navigation.navigate("VideoPlayer", {
+            url: selected[0].url,
+            episodeName: selected[0].episodeName,
+            season: selected[0].season,
+          });
         }
       } else {
         navigation.navigate("VideoPlayer", {

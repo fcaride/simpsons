@@ -59,3 +59,13 @@ export interface MediaStatus {
 export const useMediaStatus = (): MediaStatus | null => {
   return null;
 };
+
+export function prepareForCast(_url: string) {
+  // no-op in fallback
+}
+
+export async function castQueue(
+  _items: { url: string; title?: string; subtitle?: string }[]
+): Promise<boolean> {
+  return false;
+}
