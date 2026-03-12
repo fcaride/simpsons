@@ -43,7 +43,8 @@
     },
     "plugins": [
       "react-native-google-cast",
-      "expo-video"
+      "expo-video",
+      "expo-font"
     ]
   }
 }
