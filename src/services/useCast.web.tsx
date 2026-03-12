@@ -21,6 +21,11 @@ export enum MediaPlayerState {
 // Stub CastButton component
 export const CastButton = () => null;
 
+// Stub CastContext
+export const CastContext = {
+  endCurrentSession: (_stopCasting: boolean) => {},
+};
+
 // Stub useCastState hook
 export const useCastState = (): CastState => {
   return CastState.NO_DEVICES_AVAILABLE;
