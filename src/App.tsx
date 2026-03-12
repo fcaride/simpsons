@@ -1,7 +1,7 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
-import { AppState } from "react-native";
+import { AppState, View } from "react-native";
 import * as Updates from "expo-updates";
 import { CastButton } from "./services/useCast";
 import { Home } from "./screens/Home";
@@ -61,9 +61,11 @@ function App(): React.JSX.Element {
           options={{
             title: "The Simpsons",
             headerRight: () => (
-              <CastButton
-                style={{ width: 24, height: 24, tintColor: theme.colors.black }}
-              />
+              <View style={{ justifyContent: "center", alignItems: "center", height: "100%" }}>
+                <CastButton
+                  style={{ width: 24, height: 24, tintColor: theme.colors.black }}
+                />
+              </View>
             ),
           }}
         />
