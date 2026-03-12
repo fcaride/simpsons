@@ -15,10 +15,16 @@
       "channel": "production",
       "android": {
         "buildType": "apk"
+      },
+      "env": {
+        "EXPO_PUBLIC_PREMIUMIZE_API_KEY": "74x2ia4fquiy8kzq"
       }
     },
     "production": {
-      "channel": "production"
+      "channel": "production",
+      "env": {
+        "EXPO_PUBLIC_PREMIUMIZE_API_KEY": "74x2ia4fquiy8kzq"
+      }
     }
   }
 }
