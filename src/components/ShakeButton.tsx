@@ -34,37 +34,51 @@ export const ShakeButton = ({
 
     isProcessing.current = true;
 
-    const randomIndex = Math.floor(Math.random() * flattenList.length);
-    const randomEpisode = flattenList[randomIndex];
+    const shuffled = [...flattenList];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    const selected = shuffled.slice(0, 20);
 
     try {
       if (castState === CastState.CONNECTED && client) {
         await client.loadMedia({
           mediaInfo: {
-            contentUrl: randomEpisode.url,
-            contentType: "video/mp4",
+            contentUrl: selected[0].url,
             metadata: {
-              type: "movie",
-              title: randomEpisode.episodeName,
-              subtitle: randomEpisode.season,
-              images: [],
-            },
+              title: selected[0].episodeName,
+              subtitle: selected[0].season,
+            } as any,
           },
           autoplay: true,
         });
+
+        if (selected.length > 1) {
+          const queueItems = selected.slice(1).map((episode) => ({
+            mediaInfo: {
+              contentUrl: episode.url,
+              metadata: {
+                title: episode.episodeName,
+                subtitle: episode.season,
+              } as any,
+            },
+          }));
+          await (client as any).queueInsertItems(queueItems);
+        }
       } else {
         navigation.navigate("VideoPlayer", {
-          url: randomEpisode.url,
-          episodeName: randomEpisode.episodeName,
-          season: randomEpisode.season,
+          url: selected[0].url,
+          episodeName: selected[0].episodeName,
+          season: selected[0].season,
         });
       }
     } catch (error) {
-      console.warn("ShakeButton loadMedia failed, falling back to local:", error);
+      console.warn("ShakeButton cast failed:", error);
       navigation.navigate("VideoPlayer", {
-        url: randomEpisode.url,
-        episodeName: randomEpisode.episodeName,
-        season: randomEpisode.season,
+        url: selected[0].url,
+        episodeName: selected[0].episodeName,
+        season: selected[0].season,
       });
     } finally {
       setTimeout(() => {
