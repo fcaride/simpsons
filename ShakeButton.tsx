@@ -7,58 +7,71 @@ import {
 } from "./services/useCast";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootStackParamList } from "./types";
-import { useEpisodes } from "./hooks/useEpisodes";
+import { RootStackParamList, SeasonData } from "./types";
 
-export const ShakeButton = (): React.JSX.Element | null => {
+interface ShakeButtonProps {
+  episodes: SeasonData[];
+}
+
+export const ShakeButton = ({
+  episodes,
+}: ShakeButtonProps): React.JSX.Element | null => {
   const animation = useRef(new Animated.Value(0)).current;
+  const isProcessing = useRef(false);
 
   const client = useRemoteMediaClient();
   const castState = useCastState();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
-  const { episodes } = useEpisodes();
-
   const handleRandomPress = () => {
+    if (isProcessing.current) return;
+
     const flattenList = episodes.map((section) => section.data).flat();
 
     if (flattenList.length === 0) return;
 
-    if (castState === CastState.CONNECTED) {
-      const items = flattenList.map((episode) => {
-        const { url, episodeName, season } = episode;
-        return {
-          mediaInfo: {
-            contentUrl: url,
-            metadata: {
-              title: episodeName,
-              subtitle: season,
-            } as any,
-          },
-          preloadTime: 30,
-        };
-      });
-      // Shuffle items using Fisher-Yates algorithm
-      for (let i = items.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [items[i], items[j]] = [items[j], items[i]];
-      }
+    isProcessing.current = true;
 
-      client?.loadMedia({
-        queueData: {
-          items,
-        },
-      });
-    } else {
-      // Local play: pick one random episode
-      const randomIndex = Math.floor(Math.random() * flattenList.length);
-      const randomEpisode = flattenList[randomIndex];
-      navigation.navigate("VideoPlayer", {
-        url: randomEpisode.url,
-        episodeName: randomEpisode.episodeName,
-        season: randomEpisode.season,
-      });
+    try {
+      if (castState === CastState.CONNECTED && client) {
+        const items = flattenList.map((episode) => {
+          const { url, episodeName, season } = episode;
+          return {
+            mediaInfo: {
+              contentUrl: url,
+              metadata: {
+                title: episodeName,
+                subtitle: season,
+              } as any,
+            },
+            preloadTime: 30,
+          };
+        });
+        // Shuffle items using Fisher-Yates algorithm
+        for (let i = items.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [items[i], items[j]] = [items[j], items[i]];
+        }
+
+        client.loadMedia({
+          queueData: {
+            items,
+          },
+        });
+      } else {
+        const randomIndex = Math.floor(Math.random() * flattenList.length);
+        const randomEpisode = flattenList[randomIndex];
+        navigation.navigate("VideoPlayer", {
+          url: randomEpisode.url,
+          episodeName: randomEpisode.episodeName,
+          season: randomEpisode.season,
+        });
+      }
+    } finally {
+      setTimeout(() => {
+        isProcessing.current = false;
+      }, 500);
     }
   };
 

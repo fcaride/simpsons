@@ -3,14 +3,12 @@ import * as ScreenOrientation from "expo-screen-orientation";
 import { useRef, useState, useEffect } from "react";
 import {
   ActivityIndicator,
-  Dimensions,
   StyleSheet,
   View,
   Button,
   Text,
   TouchableOpacity,
   SafeAreaView,
-  Platform,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
@@ -35,17 +33,22 @@ export function VideoPlayer({ route }: VideoPlayerProps): React.JSX.Element {
   const [isLoading, setIsLoading] = useState(true);
   const navigation = useNavigation();
 
-  const player = useVideoPlayer(url, (player) => {
-    player.play();
-  });
-
-  // Cast integration
   const castState = useCastState();
   const remoteMediaClient = useRemoteMediaClient();
+  const castStateRef = useRef(castState);
+
+  useEffect(() => {
+    castStateRef.current = castState;
+  }, [castState]);
+
+  const player = useVideoPlayer(url, (player) => {
+    if (castState !== CastState.CONNECTED) {
+      player.play();
+    }
+  });
 
   useEffect(() => {
     if (castState === CastState.CONNECTED && remoteMediaClient) {
-      // Cast the video
       remoteMediaClient.loadMedia({
         mediaInfo: {
           contentUrl: url,
@@ -59,7 +62,6 @@ export function VideoPlayer({ route }: VideoPlayerProps): React.JSX.Element {
         },
         autoplay: true,
       });
-      // Pause local player when casting starts
       player.pause();
     }
   }, [castState, remoteMediaClient, url, episodeName, season]);
@@ -111,10 +113,15 @@ export function VideoPlayer({ route }: VideoPlayerProps): React.JSX.Element {
 
   useEffect(() => {
     const subscription = player.addListener("statusChange", (status) => {
-      // Hide spinner when video is ready to play
       if (status.status === "readyToPlay") {
         setIsLoading(false);
-        player.play();
+        if (castStateRef.current !== CastState.CONNECTED) {
+          player.play();
+        }
+      }
+      if (status.status === "error") {
+        setIsError(true);
+        setIsLoading(false);
       }
     });
 

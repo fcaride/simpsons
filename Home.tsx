@@ -55,7 +55,7 @@ export function Home(): React.JSX.Element {
         stickySectionHeadersEnabled={true}
       />
       <MediaControls />
-      <ShakeButton />
+      <ShakeButton episodes={episodes} />
     </SafeAreaView>
   );
 }
