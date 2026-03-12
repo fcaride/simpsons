@@ -25,7 +25,7 @@ export const ShakeButton = ({
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
-  const handleRandomPress = () => {
+  const handleRandomPress = async () => {
     if (isProcessing.current) return;
 
     const flattenList = episodes.map((section) => section.data).flat();
@@ -34,41 +34,38 @@ export const ShakeButton = ({
 
     isProcessing.current = true;
 
+    const randomIndex = Math.floor(Math.random() * flattenList.length);
+    const randomEpisode = flattenList[randomIndex];
+
     try {
       if (castState === CastState.CONNECTED && client) {
-        const items = flattenList.map((episode) => {
-          const { url, episodeName, season } = episode;
-          return {
-            mediaInfo: {
-              contentUrl: url,
-              metadata: {
-                title: episodeName,
-                subtitle: season,
-              } as any,
+        await client.loadMedia({
+          mediaInfo: {
+            contentUrl: randomEpisode.url,
+            contentType: "video/mp4",
+            metadata: {
+              type: "movie",
+              title: randomEpisode.episodeName,
+              subtitle: randomEpisode.season,
+              images: [],
             },
-            preloadTime: 30,
-          };
-        });
-        // Shuffle items using Fisher-Yates algorithm
-        for (let i = items.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [items[i], items[j]] = [items[j], items[i]];
-        }
-
-        client.loadMedia({
-          queueData: {
-            items,
           },
+          autoplay: true,
         });
       } else {
-        const randomIndex = Math.floor(Math.random() * flattenList.length);
-        const randomEpisode = flattenList[randomIndex];
         navigation.navigate("VideoPlayer", {
           url: randomEpisode.url,
           episodeName: randomEpisode.episodeName,
           season: randomEpisode.season,
         });
       }
+    } catch (error) {
+      console.warn("ShakeButton loadMedia failed, falling back to local:", error);
+      navigation.navigate("VideoPlayer", {
+        url: randomEpisode.url,
+        episodeName: randomEpisode.episodeName,
+        season: randomEpisode.season,
+      });
     } finally {
       setTimeout(() => {
         isProcessing.current = false;
