@@ -61,7 +61,7 @@ function App(): React.JSX.Element {
           options={{
             title: "The Simpsons",
             headerRight: () => (
-              <View style={{ justifyContent: "center", alignItems: "center", height: "100%" }}>
+              <View style={{ justifyContent: "center", alignItems: "center", height: "100%", paddingRight: 12 }}>
                 <CastButton
                   style={{ width: 24, height: 24, tintColor: theme.colors.black }}
                 />
