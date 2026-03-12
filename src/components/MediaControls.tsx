@@ -7,20 +7,18 @@ import {
   CastState,
 } from "../services/useCast";
 import { theme } from "../theme";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export const MediaControls = (): React.JSX.Element | null => {
   const client = useRemoteMediaClient();
   const mediaStatus = useMediaStatus();
   const castState = useCastState();
-  const insets = useSafeAreaInsets();
 
   if (castState !== CastState.CONNECTED) return null;
 
   const isPlaying = mediaStatus?.playerState === MediaPlayerState.PLAYING;
 
   return (
-    <View style={[styles.wrapper, { paddingBottom: Math.max(insets.bottom, 10) }]}>
+    <View style={[styles.wrapper, { paddingBottom: 10 }]}>
       <View style={styles.container}>
         <TouchableOpacity
           style={styles.button}
@@ -49,12 +47,10 @@ export const MediaControls = (): React.JSX.Element | null => {
 
 const styles = StyleSheet.create({
   wrapper: {
-    position: "absolute",
-    bottom: 0,
     width: "100%",
     backgroundColor: theme.colors.background,
-    borderTopWidth: 1,
-    borderTopColor: "#ddd",
+    borderBottomWidth: 1,
+    borderBottomColor: "#ddd",
     paddingTop: 10,
     ...theme.shadows.default,
   },

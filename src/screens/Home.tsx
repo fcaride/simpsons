@@ -53,6 +53,7 @@ export function Home(): React.JSX.Element {
 
   return (
     <SafeAreaView style={styles.container}>
+      <MediaControls />
       <SectionList
         sections={episodes}
         keyExtractor={(item) => item.url}
@@ -65,7 +66,6 @@ export function Home(): React.JSX.Element {
         contentContainerStyle={styles.listContent}
         stickySectionHeadersEnabled={true}
       />
-      <MediaControls />
       <ShakeButton episodes={episodes} />
     </SafeAreaView>
   );
