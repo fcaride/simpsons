@@ -11,7 +11,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.simpsons"
@@ -39,6 +41,9 @@
     "updates": {
       "url": "https://u.expo.dev/d2069ad7-d70e-4ea8-a9e4-99e064dc2be7"
     },
-    "plugins": ["react-native-google-cast"]
+    "plugins": [
+      "react-native-google-cast",
+      "expo-video"
+    ]
   }
 }
