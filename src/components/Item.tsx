@@ -1,16 +1,16 @@
 import React, { useCallback } from "react";
 import { TouchableOpacity, Text, StyleSheet, View } from "react-native";
-import { CastState } from "./services/useCast";
+import { CastState } from "../services/useCast";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Ionicons } from "@expo/vector-icons";
-import { theme } from "./theme";
-import { Episode, RootStackParamList } from "./types";
+import { theme } from "../theme";
+import { Episode, RootStackParamList } from "../types";
 
 interface ItemProps {
   item: Episode;
   castState: CastState;
-  castClient: ReturnType<typeof import("./services/useCast").useRemoteMediaClient>;
+  castClient: ReturnType<typeof import("../services/useCast").useRemoteMediaClient>;
 }
 
 export const Item = React.memo(

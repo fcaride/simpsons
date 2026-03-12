@@ -4,11 +4,11 @@ import {
   useRemoteMediaClient,
   useCastState,
   CastState,
-} from "./services/useCast";
+} from "../services/useCast";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootStackParamList, SeasonData } from "./types";
-import { theme } from "./theme";
+import { RootStackParamList, SeasonData } from "../types";
+import { theme } from "../theme";
 
 interface ShakeButtonProps {
   episodes: SeasonData[];
@@ -149,7 +149,7 @@ export const ShakeButton = ({
             },
           ],
         }}
-        source={require("./assets/lacaja.png")}
+        source={require("../../assets/lacaja.png")}
       />
     </TouchableOpacity>
   );

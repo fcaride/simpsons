@@ -14,14 +14,14 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { theme } from "./theme";
-import { RootStackParamList } from "./types";
+import { theme } from "../theme";
+import { RootStackParamList } from "../types";
 import {
   CastButton,
   useRemoteMediaClient,
   useCastState,
   CastState,
-} from "./services/useCast";
+} from "../services/useCast";
 
 type VideoPlayerProps = NativeStackScreenProps<
   RootStackParamList,

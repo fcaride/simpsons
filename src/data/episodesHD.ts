@@ -1,4 +1,4 @@
-import { PremiumizeEpisode } from "./types";
+import { PremiumizeEpisode } from "../types";
 
 export const premiumizeData: Record<string, PremiumizeEpisode[]> = {
   season1: [

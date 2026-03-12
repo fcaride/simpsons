@@ -7,13 +7,13 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Item } from "./Item";
-import { MediaControls } from "./MediaControls";
-import { theme } from "./theme";
-import { ShakeButton } from "./ShakeButton";
-import { useEpisodes } from "./hooks/useEpisodes";
-import { useCastState, useRemoteMediaClient } from "./services/useCast";
-import { Episode } from "./types";
+import { Item } from "../components/Item";
+import { MediaControls } from "../components/MediaControls";
+import { theme } from "../theme";
+import { ShakeButton } from "../components/ShakeButton";
+import { useEpisodes } from "../hooks/useEpisodes";
+import { useCastState, useRemoteMediaClient } from "../services/useCast";
+import { Episode } from "../types";
 
 export function Home(): React.JSX.Element {
   const { episodes, loading, error } = useEpisodes();

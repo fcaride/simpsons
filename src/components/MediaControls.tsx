@@ -5,8 +5,8 @@ import {
   MediaPlayerState,
   useCastState,
   CastState,
-} from "./services/useCast";
-import { theme } from "./theme";
+} from "../services/useCast";
+import { theme } from "../theme";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export const MediaControls = (): React.JSX.Element | null => {

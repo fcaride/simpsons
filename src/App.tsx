@@ -4,8 +4,8 @@ import * as React from "react";
 import { AppState } from "react-native";
 import * as Updates from "expo-updates";
 import { CastButton } from "./services/useCast";
-import { Home } from "./Home";
-import { VideoPlayer } from "./VideoPlayer";
+import { Home } from "./screens/Home";
+import { VideoPlayer } from "./screens/VideoPlayer";
 import { theme } from "./theme";
 import { RootStackParamList } from "./types";
 
