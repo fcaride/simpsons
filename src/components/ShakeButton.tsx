@@ -43,7 +43,25 @@ export const ShakeButton = ({
     const selected = shuffled.slice(0, 20);
 
     try {
-      if (castState === CastState.CONNECTED && client) {
+      if (castState === CastState.CONNECTED && Platform.OS === "web") {
+        const mod = await import("../services/useCast");
+        const casted =
+          "castQueue" in mod &&
+          (await (mod as any).castQueue(
+            selected.map((ep) => ({
+              url: ep.url,
+              title: ep.episodeName,
+              subtitle: ep.season,
+            }))
+          ));
+        if (!casted) {
+          navigation.navigate("VideoPlayer", {
+            url: selected[0].url,
+            episodeName: selected[0].episodeName,
+            season: selected[0].season,
+          });
+        }
+      } else if (castState === CastState.CONNECTED && client) {
         await client.loadMedia({
           mediaInfo: {
             contentUrl: selected[0].url,
@@ -66,24 +84,6 @@ export const ShakeButton = ({
             },
           }));
           await (client as any).queueInsertItems(queueItems);
-        }
-      } else if (Platform.OS === "web") {
-        const mod = await import("../services/useCast");
-        const casted =
-          "castQueue" in mod &&
-          (await (mod as any).castQueue(
-            selected.map((ep) => ({
-              url: ep.url,
-              title: ep.episodeName,
-              subtitle: ep.season,
-            }))
-          ));
-        if (!casted) {
-          navigation.navigate("VideoPlayer", {
-            url: selected[0].url,
-            episodeName: selected[0].episodeName,
-            season: selected[0].season,
-          });
         }
       } else {
         navigation.navigate("VideoPlayer", {
