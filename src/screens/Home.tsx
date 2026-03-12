@@ -52,7 +52,7 @@ export function Home(): React.JSX.Element {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['bottom', 'left', 'right']}>
       <MediaControls />
       <SectionList
         sections={episodes}
