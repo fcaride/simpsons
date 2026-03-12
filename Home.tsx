@@ -1,12 +1,12 @@
 import React, { useCallback } from "react";
 import {
-  SafeAreaView,
   SectionList,
   StyleSheet,
   Text,
   View,
   ActivityIndicator,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Item } from "./Item";
 import { MediaControls } from "./MediaControls";
 import { theme } from "./theme";
