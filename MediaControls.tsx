@@ -1,10 +1,4 @@
-import {
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  Text,
-  SafeAreaView,
-} from "react-native";
+import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
 import {
   useRemoteMediaClient,
   useMediaStatus,
@@ -13,33 +7,20 @@ import {
   CastState,
 } from "./services/useCast";
 import { theme } from "./theme";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export const MediaControls = (): React.JSX.Element | null => {
   const client = useRemoteMediaClient();
   const mediaStatus = useMediaStatus();
   const castState = useCastState();
-
-  const statusButton =
-    mediaStatus?.playerState === MediaPlayerState.PLAYING ? (
-      <TouchableOpacity
-        style={[styles.button, styles.playPauseButton]}
-        onPress={() => client?.pause()}
-      >
-        <Text style={styles.textButton}>Pause</Text>
-      </TouchableOpacity>
-    ) : (
-      <TouchableOpacity
-        style={[styles.button, styles.playPauseButton]}
-        onPress={() => client?.play()}
-      >
-        <Text style={styles.textButton}>Play</Text>
-      </TouchableOpacity>
-    );
+  const insets = useSafeAreaInsets();
 
   if (castState !== CastState.CONNECTED) return null;
 
+  const isPlaying = mediaStatus?.playerState === MediaPlayerState.PLAYING;
+
   return (
-    <View style={styles.wrapper}>
+    <View style={[styles.wrapper, { paddingBottom: Math.max(insets.bottom, 10) }]}>
       <View style={styles.container}>
         <TouchableOpacity
           style={styles.button}
@@ -48,7 +29,12 @@ export const MediaControls = (): React.JSX.Element | null => {
           <Text style={styles.textButton}>Prev</Text>
         </TouchableOpacity>
 
-        {statusButton}
+        <TouchableOpacity
+          style={[styles.button, styles.playPauseButton]}
+          onPress={() => (isPlaying ? client?.pause() : client?.play())}
+        >
+          <Text style={styles.textButton}>{isPlaying ? "Pause" : "Play"}</Text>
+        </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.button}
@@ -69,7 +55,6 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.background,
     borderTopWidth: 1,
     borderTopColor: "#ddd",
-    paddingBottom: 20, // SafeArea
     paddingTop: 10,
     ...theme.shadows.default,
   },

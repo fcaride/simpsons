@@ -1,9 +1,7 @@
-// In App.js in a new project
-
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
-import { StyleSheet, AppState } from "react-native";
+import { AppState } from "react-native";
 import * as Updates from "expo-updates";
 import { CastButton } from "./services/useCast";
 import { Home } from "./Home";
@@ -78,20 +76,5 @@ function App(): React.JSX.Element {
     </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  randomButton: {
-    marginRight: 10,
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    backgroundColor: theme.colors.secondary,
-    borderRadius: 20,
-  },
-  randomButtonText: {
-    color: theme.colors.white,
-    fontWeight: "bold",
-    fontSize: 12,
-  },
-});
 
 export default App;

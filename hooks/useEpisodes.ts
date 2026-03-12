@@ -9,10 +9,6 @@ interface UseEpisodesResult {
   refetch: () => Promise<void>;
 }
 
-/**
- * Hook to fetch episodes from Premiumize API
- * Handles loading state, error state, and provides refetch capability
- */
 export function useEpisodes(): UseEpisodesResult {
   const [episodes, setEpisodes] = useState<SeasonData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -20,8 +16,8 @@ export function useEpisodes(): UseEpisodesResult {
 
   const hasFetched = useRef(false);
 
-  const fetchEpisodes = useCallback(async () => {
-    if (hasFetched.current) return;
+  const fetchEpisodes = useCallback(async (force = false) => {
+    if (hasFetched.current && !force) return;
     hasFetched.current = true;
 
     try {
@@ -32,7 +28,6 @@ export function useEpisodes(): UseEpisodesResult {
     } catch (err) {
       console.error("Failed to fetch episodes:", err);
       setError(err instanceof Error ? err.message : "Failed to load episodes");
-      // Reset so we can try again if it failed
       hasFetched.current = false;
     } finally {
       setLoading(false);
@@ -43,10 +38,12 @@ export function useEpisodes(): UseEpisodesResult {
     fetchEpisodes();
   }, [fetchEpisodes]);
 
+  const refetch = useCallback(() => fetchEpisodes(true), [fetchEpisodes]);
+
   return {
     episodes,
     loading,
     error,
-    refetch: fetchEpisodes,
+    refetch,
   };
 }

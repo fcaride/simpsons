@@ -52,18 +52,10 @@ class PremiumizeService {
     return data;
   }
 
-  /**
-   * List contents of a folder by ID
-   * If no ID is provided, lists the root folder
-   */
-  private cache: Map<string, { timestamp: number; data: any }> = new Map();
-  private pendingRequests: Map<string, Promise<any>> = new Map();
-  private CACHE_DURATION = 1000 * 60 * 5; // 5 minutes cache
+  private cache: Map<string, { timestamp: number; data: PremiumizeFolderResponse }> = new Map();
+  private pendingRequests: Map<string, Promise<PremiumizeFolderResponse>> = new Map();
+  private CACHE_DURATION = 1000 * 60 * 5;
 
-  /**
-   * List contents of a folder by ID
-   * If no ID is provided, lists the root folder
-   */
   async listFolder(folderId?: string): Promise<PremiumizeFolderResponse> {
     const cacheKey = folderId || "root";
 
@@ -150,18 +142,6 @@ class PremiumizeService {
   ): Promise<PremiumizeItem[]> {
     const contents = await this.listFolder(seasonFolderId);
 
-    console.log(
-      `[Premiumize] Season folder ${seasonFolderId} contents:`,
-      contents.content.length,
-      "items"
-    );
-    if (contents.content.length > 0) {
-      console.log(
-        `[Premiumize] First item sample:`,
-        JSON.stringify(contents.content[0], null, 2)
-      );
-    }
-
     // Filter for video files and sort by name
     return contents.content
       .filter(
@@ -199,31 +179,24 @@ class PremiumizeService {
    */
   async getAllEpisodes(): Promise<SeasonData[]> {
     const seasonFolders = await this.getSeasonFolders();
-    const sections: SeasonData[] = [];
 
-    for (const seasonFolder of seasonFolders) {
-      // Parse season number from folder name (e.g., "01" -> 1)
-      const seasonNumber = parseInt(seasonFolder.name, 10);
-      const seasonName = `Temporada ${seasonNumber}`;
+    const results = await Promise.all(
+      seasonFolders.map(async (seasonFolder) => {
+        const seasonNumber = parseInt(seasonFolder.name, 10);
+        const seasonName = `Temporada ${seasonNumber}`;
+        const episodes = await this.getEpisodesForSeason(seasonFolder.id);
 
-      const episodes = await this.getEpisodesForSeason(seasonFolder.id);
-
-      const episodeData: Episode[] = episodes.map((episode) => ({
-        episodeName: this.parseEpisodeName(episode.name),
-        url: episode.stream_link || episode.link || "",
-        season: seasonName,
-      }));
-
-      // Only add seasons that have episodes
-      if (episodeData.length > 0) {
-        sections.push({
+        const episodeData: Episode[] = episodes.map((episode) => ({
+          episodeName: this.parseEpisodeName(episode.name),
+          url: episode.stream_link || episode.link || "",
           season: seasonName,
-          data: episodeData,
-        });
-      }
-    }
+        }));
 
-    return sections;
+        return { season: seasonName, data: episodeData };
+      })
+    );
+
+    return results.filter((section) => section.data.length > 0);
   }
 }
 

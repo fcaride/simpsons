@@ -1,7 +1,8 @@
 // Premiumize Configuration
 // Get your API key from: https://www.premiumize.me/account
+// Set EXPO_PUBLIC_PREMIUMIZE_API_KEY in your .env file
 
-export const PREMIUMIZE_API_KEY = "74x2ia4fquiy8kzq"; // TODO: Add your API key here
+export const PREMIUMIZE_API_KEY =
+  process.env.EXPO_PUBLIC_PREMIUMIZE_API_KEY ?? "";
 
-// Folder structure in Premiumize
 export const SIMPSONS_FOLDER_NAME = "the_simpsons";

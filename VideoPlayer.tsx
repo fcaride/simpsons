@@ -8,11 +8,12 @@ import {
   Button,
   Text,
   TouchableOpacity,
-  SafeAreaView,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { theme } from "./theme";
 import { RootStackParamList } from "./types";
 import {
@@ -32,6 +33,7 @@ export function VideoPlayer({ route }: VideoPlayerProps): React.JSX.Element {
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const navigation = useNavigation();
+  const insets = useSafeAreaInsets();
 
   const castState = useCastState();
   const remoteMediaClient = useRemoteMediaClient();
@@ -132,7 +134,7 @@ export function VideoPlayer({ route }: VideoPlayerProps): React.JSX.Element {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
+      <View style={[styles.header, { top: insets.top }]}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={styles.backButton}
@@ -154,7 +156,7 @@ export function VideoPlayer({ route }: VideoPlayerProps): React.JSX.Element {
         {castState === CastState.CONNECTED ? (
           <View style={styles.castingContainer}>
             <Ionicons name="tv-outline" size={64} color="white" />
-            <Text style={styles.castingText}>Casting to device</Text>
+            <Text style={styles.castingText}>Transmitiendo al dispositivo</Text>
           </View>
         ) : (
           <VideoView
@@ -178,9 +180,9 @@ export function VideoPlayer({ route }: VideoPlayerProps): React.JSX.Element {
 
       {isError && (
         <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>Error loading video</Text>
+          <Text style={styles.errorText}>Error al cargar el video</Text>
           <Button
-            title="Retry"
+            title="Reintentar"
             color={theme.colors.secondary}
             onPress={() => {
               player.replace(url);
@@ -201,7 +203,6 @@ const styles = StyleSheet.create({
   },
   header: {
     position: "absolute",
-    top: 40, // Adjust for status bar if SafeAreaView doesn't handle absolute
     left: 0,
     right: 0,
     flexDirection: "row",
@@ -209,7 +210,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 10,
     zIndex: 10,
-    backgroundColor: "rgba(0,0,0,0.5)", // Semi-transparent background
+    backgroundColor: "rgba(0,0,0,0.5)",
   },
   backButton: {
     padding: 5,
@@ -266,22 +267,5 @@ const styles = StyleSheet.create({
   errorText: {
     color: "white",
     marginBottom: 10,
-  },
-  shakeButton: {
-    position: "absolute",
-    bottom: 40,
-    right: 20,
-    backgroundColor: theme.colors.primary,
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    justifyContent: "center",
-    alignItems: "center",
-    elevation: 5,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    zIndex: 20,
   },
 });

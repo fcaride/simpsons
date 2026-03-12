@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import {
   SafeAreaView,
   SectionList,
@@ -12,9 +12,20 @@ import { MediaControls } from "./MediaControls";
 import { theme } from "./theme";
 import { ShakeButton } from "./ShakeButton";
 import { useEpisodes } from "./hooks/useEpisodes";
+import { useCastState, useRemoteMediaClient } from "./services/useCast";
+import { Episode } from "./types";
 
 export function Home(): React.JSX.Element {
   const { episodes, loading, error } = useEpisodes();
+  const castState = useCastState();
+  const castClient = useRemoteMediaClient();
+
+  const renderItem = useCallback(
+    ({ item }: { item: Episode }) => (
+      <Item item={item} castState={castState} castClient={castClient} />
+    ),
+    [castState, castClient]
+  );
 
   if (loading) {
     return (
@@ -44,8 +55,8 @@ export function Home(): React.JSX.Element {
     <SafeAreaView style={styles.container}>
       <SectionList
         sections={episodes}
-        keyExtractor={(item, index) => `${item.episodeName}-${index}`}
-        renderItem={({ item }) => <Item item={item} />}
+        keyExtractor={(item) => item.url}
+        renderItem={renderItem}
         renderSectionHeader={({ section: { season } }) => (
           <View style={styles.headerContainer}>
             <Text style={styles.header}>{season}</Text>

@@ -8,6 +8,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList, SeasonData } from "./types";
+import { theme } from "./theme";
 
 interface ShakeButtonProps {
   episodes: SeasonData[];
@@ -162,7 +163,7 @@ const styles = StyleSheet.create({
     width: 95,
     height: 95,
     borderRadius: 45,
-    backgroundColor: "#07537f",
+    backgroundColor: theme.colors.secondary,
     alignItems: "center",
     justifyContent: "center",
   },
